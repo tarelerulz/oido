@@ -26,3 +26,7 @@ tasr_cli_a72: tasr_cli.c $(SRC) $(HDR)
 PHONE_FLAGS = -O3 -march=armv8.2-a+dotprod -pthread -DTASR_NW=8 -std=c11 -D_DEFAULT_SOURCE -ffp-contract=off -funroll-loops -I../components/tinyasr/include -I../components/tinyasr -Wall -Wno-unused-function
 tasr_cli_phone: tasr_cli.c $(SRC) $(HDR)
 	$(CC) $(PHONE_FLAGS) -o $@ tasr_cli.c $(SRC) -lm
+
+# Benchmark (synthetic clips, timing only). Build on phone: make bench
+bench: bench.c $(SRC) $(HDR)
+	$(CC) $(PHONE_FLAGS) -o $@ bench.c $(SRC) -lm

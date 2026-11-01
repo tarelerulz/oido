@@ -1,32 +1,50 @@
 # oido: offline speech-to-text for Android (Termux) and Raspberry Pi 400
 
-Build the C speech engine on a phone (Termux) or on a Pi 400, and use it from nano
-(Ctrl+T dictation on Pi 400, see `oido_nano.sh`).
+Build the C speech engine on a phone (Termux) or on a Pi 400, and use it from nano:
+Ctrl+T records a few seconds and replaces `[oido]` with the transcript.
 
 ## Contents
 
 - `components/tinyasr/`: the C engine (NeMo Conformer-CTC, language model, segmenter).
-- `host/Makefile`: builds the CLI for each target.
-- `host/tasr_cli.c`: command-line front end (`tasr_cli <model.tnm> [--lm lm.tlm] <audio.wav>`).
+  Includes the host thread pool (`tasr_set_threads`, skips little cores) and the DOTPROD path.
+- `host/Makefile`: build targets (`tasr_cli_phone`, `tasr_cli_a72`, `bench`).
+- `host/tasr_cli.c`: command-line front end.
+- `host/bench.c`: timing benchmark on synthetic clips.
 - `host/pi400_setup.sh`: builds `tasr_cli_a72` on a Pi 400 and installs `oido_nano.sh`.
-- `oido_nano.sh`: nano speller hook; records 5 s and replaces `[oido]` with the transcript.
-- `optimization_log.md`, `speedup_ideas.md`: measurements and open speed ideas (phone and Pi).
+- `oido_nano.sh`: Pi 400 nano hook (ALSA `arecord`).
+- `phone/oido_nano.sh`: phone (Termux) nano hook (`parecord`, optional punctuation).
+- `phone/oido_web.py`: small web server with punctuation.
+- `phone/transcribe.py`: batch transcription of 16 kHz WAV files.
+- `phone/transcribe_apollo.sh`: long-file test script.
+- `docs/phone-benchmarks.md`: measured numbers and the changes behind them.
 
-Model weights are not included. The CLI needs a `.tnm` model and optionally a `.tlm` language model.
+## Model files (not included)
+
+The CLI needs a `.tnm` model and optionally a `.tlm` language model. Put them where the scripts expect:
+
+- phone: `~/tasr_bench/nemo8.tnm` and `/sdcard/oido/models/nemo_lm.tlm`
+- Pi 400: `~/oido/models/nemo8.tnm` and `~/oido/models/nemo_lm.tlm`
+
+Paths are set at the top of each script.
 
 ## Build the phone version (Termux, aarch64, ARMv8.2 + dotprod)
 
-    pkg install clang make
+    pkg install clang make python
     cd host
     make tasr_cli_phone
-    ./tasr_cli_phone /path/to/model.tnm --lm /path/to/lm.tlm /path/to/audio16k.wav
+    mkdir -p ~/tasr_bench && cp tasr_cli_phone ~/tasr_bench/tasr_cli_1t
+    ./tasr_cli_phone /path/to/nemo8.tnm --lm /path/to/nemo_lm.tlm /path/to/audio16k.wav
 
-Audio must be 16 kHz mono 16-bit WAV.
+Audio must be 16 kHz mono 16-bit WAV. Multi-threaded: `TASR_THREADS=4` (default: fast cores).
+
+Optional punctuation (used by `phone/oido_nano.sh` and `phone/oido_web.py` if present):
+a sherpa-onnx punctuation CLI at `~/punct_cli` and its model. Without them the raw text is used.
 
 ## Build for Pi 400 (Cortex-A72, NEON only)
 
     cd host
     make tasr_cli_a72
+    bash pi400_setup.sh   # also installs ~/oido_nano.sh
 
 ## License
 
