@@ -1,0 +1,16 @@
+# Build outputs
+host/tasr_cli
+host/tasr_cli_a72
+host/tasr_cli_phone
+host/seg_test
+*.dylib
+*.so
+*.o
+*.a
+
+# Local recordings and caches
+*.wav
+__pycache__/
+*.pyc
+*.bak
+*.bak-*
