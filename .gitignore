@@ -1,17 +1,16 @@
-# Build outputs
+# Build outputs from the Pi and host builds (phone binaries live in phone/bin)
 host/tasr_cli
 host/tasr_cli_a72
-host/tasr_cli_phone
 host/seg_test
-*.dylib
-*.so
+host/bench
 *.o
 *.a
 
-# Local recordings and caches
-*.wav
+# Python caches and local leftovers
 __pycache__/
 *.pyc
 *.bak
 *.bak-*
-host/bench
+
+# Local recordings (may contain voice)
+*.wav

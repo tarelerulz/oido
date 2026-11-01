@@ -49,3 +49,14 @@ a sherpa-onnx punctuation CLI at `~/punct_cli` and its model. Without them the r
 ## License
 
 GNU GPL v3 (see `LICENSE`). Copyright notices in the source files are unchanged.
+
+## Prebuilt phone binaries (phone/bin)
+
+Android aarch64 builds (NDK r30, API 24, ARMv8.2 + dotprod), built on the phone from the matching source on 2026-10-31 (exact match to this tree not verified):
+
+- `phone/bin/tasr_cli_phone`: the CLI (same as `make tasr_cli_phone`)
+- `phone/bin/tasr_cli_1t`: single-thread CLI used by `phone/oido_nano.sh`
+- `phone/bin/tasr_cli_mt`: multi-thread CLI used by `phone/transcribe_apollo.sh`
+- `phone/bin/libtinyasr-android.so`: the engine as a shared library
+
+Rebuilding from this source with the NDK may give different bytes.
