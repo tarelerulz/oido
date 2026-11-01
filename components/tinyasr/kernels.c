@@ -193,27 +193,42 @@ void tasr_dot_rows_s8(const int8_t *w, const int8_t *x, int ldq, int T, int kp, 
 #elif defined(TASR_NEON)
 void tasr_dot_rows_s8(const int8_t *w, const int8_t *x, int ldq, int T, int kp, int32_t *out)
 {
-    for (int t = 0; t < T; t++) {
-        const int8_t *a = x + (size_t)t * ldq;
-        int32x4_t acc0 = vdupq_n_s32(0), acc1 = vdupq_n_s32(0);
-        int32x4_t acc2 = vdupq_n_s32(0), acc3 = vdupq_n_s32(0);
+    int t = 0;
+    for (; t + 1 < T; t += 2) {
+        const int8_t *a = x + (size_t)t * ldq, *b = a + ldq;
+        int32x4_t A0 = vdupq_n_s32(0), A1 = vdupq_n_s32(0), A2 = vdupq_n_s32(0), A3 = vdupq_n_s32(0);
+        int32x4_t B0 = vdupq_n_s32(0), B1 = vdupq_n_s32(0), B2 = vdupq_n_s32(0), B3 = vdupq_n_s32(0);
         int i = 0;
         for (; i <= kp - 32; i += 32) {
-            int8x16_t va0 = vld1q_s8(a + i),      vb0 = vld1q_s8(w + i);
-            int8x16_t va1 = vld1q_s8(a + i + 16), vb1 = vld1q_s8(w + i + 16);
-            acc0 = vpadalq_s16(acc0, vmull_s8(vget_low_s8(va0),  vget_low_s8(vb0)));
-            acc1 = vpadalq_s16(acc1, vmull_s8(vget_high_s8(va0), vget_high_s8(vb0)));
-            acc2 = vpadalq_s16(acc2, vmull_s8(vget_low_s8(va1),  vget_low_s8(vb1)));
-            acc3 = vpadalq_s16(acc3, vmull_s8(vget_high_s8(va1), vget_high_s8(vb1)));
+            __builtin_prefetch(a + i + 128); __builtin_prefetch(b + i + 128); __builtin_prefetch(w + i + 128);
+            int8x16_t w0 = vld1q_s8(w + i), w1 = vld1q_s8(w + i + 16);
+            int8x16_t a0 = vld1q_s8(a + i), a1 = vld1q_s8(a + i + 16);
+            int8x16_t b0 = vld1q_s8(b + i), b1 = vld1q_s8(b + i + 16);
+            A0 = vpadalq_s16(A0, vmull_s8(vget_low_s8(a0),  vget_low_s8(w0)));
+            A1 = vpadalq_s16(A1, vmull_s8(vget_high_s8(a0), vget_high_s8(w0)));
+            A2 = vpadalq_s16(A2, vmull_s8(vget_low_s8(a1),  vget_low_s8(w1)));
+            A3 = vpadalq_s16(A3, vmull_s8(vget_high_s8(a1), vget_high_s8(w1)));
+            B0 = vpadalq_s16(B0, vmull_s8(vget_low_s8(b0),  vget_low_s8(w0)));
+            B1 = vpadalq_s16(B1, vmull_s8(vget_high_s8(b0), vget_high_s8(w0)));
+            B2 = vpadalq_s16(B2, vmull_s8(vget_low_s8(b1),  vget_low_s8(w1)));
+            B3 = vpadalq_s16(B3, vmull_s8(vget_high_s8(b1), vget_high_s8(w1)));
         }
         for (; i <= kp - 16; i += 16) {
-            int8x16_t va = vld1q_s8(a + i), vb = vld1q_s8(w + i);
-            acc0 = vpadalq_s16(acc0, vmull_s8(vget_low_s8(va),  vget_low_s8(vb)));
-            acc1 = vpadalq_s16(acc1, vmull_s8(vget_high_s8(va), vget_high_s8(vb)));
+            int8x16_t w0 = vld1q_s8(w + i), a0 = vld1q_s8(a + i), b0 = vld1q_s8(b + i);
+            A0 = vpadalq_s16(A0, vmull_s8(vget_low_s8(a0),  vget_low_s8(w0)));
+            A1 = vpadalq_s16(A1, vmull_s8(vget_high_s8(a0), vget_high_s8(w0)));
+            B0 = vpadalq_s16(B0, vmull_s8(vget_low_s8(b0),  vget_low_s8(w0)));
+            B1 = vpadalq_s16(B1, vmull_s8(vget_high_s8(b0), vget_high_s8(w0)));
         }
-        int32x4_t sum = vaddq_s32(vaddq_s32(acc0, acc1), vaddq_s32(acc2, acc3));
-        int32_t r = vaddvq_s32(sum);
-        for (; i < kp; i++) r += (int32_t)a[i] * (int32_t)w[i];
+        int32_t ra = vaddvq_s32(vaddq_s32(vaddq_s32(A0, A1), vaddq_s32(A2, A3)));
+        int32_t rb = vaddvq_s32(vaddq_s32(vaddq_s32(B0, B1), vaddq_s32(B2, B3)));
+        for (int k = i; k < kp; k++) { ra += (int32_t)a[k] * (int32_t)w[k]; rb += (int32_t)b[k] * (int32_t)w[k]; }
+        out[t] = ra; out[t + 1] = rb;
+    }
+    for (; t < T; t++) {
+        const int8_t *a = x + (size_t)t * ldq;
+        int32_t r = 0;
+        for (int k = 0; k < kp; k++) r += (int32_t)a[k] * (int32_t)w[k];
         out[t] = r;
     }
 }
