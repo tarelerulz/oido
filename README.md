@@ -3,6 +3,16 @@
 Build the C speech engine on a phone (Termux) or on a Pi 400, and use it from nano:
 Ctrl+T records a few seconds and replaces `[oido]` with the transcript.
 
+## Credits
+
+This is a fork of **Oído** by Lokutor ([lokutor-ai/oido](https://github.com/lokutor-ai/oido), GPL-3.0). The speech engine, models, and original documentation are Lokutor's work. Changes in this repo, including the Raspberry Pi 400 and Android (Termux) builds, the nano dictation hook, and the phone scripts, are by tarel.
+
+Model weights are from Lokutor's Hugging Face pages:
+- [oido-ctc-small-int8](https://huggingface.co/lokutor-ai/oido-ctc-small-int8) (CC-BY-4.0)
+- [oido-ctc-small-int4](https://huggingface.co/lokutor-ai/oido-ctc-small-int4) (CC-BY-SA-4.0)
+- [oido-ctc-small-stream-int8](https://huggingface.co/lokutor-ai/oido-ctc-small-stream-int8) (CC-BY-SA-4.0)
+- [oido-es-ctc-small-int8](https://huggingface.co/lokutor-ai/oido-es-ctc-small-int8) (CC-BY-4.0)
+
 ## Contents
 
 - `components/tinyasr/`: the C engine (NeMo Conformer-CTC, language model, segmenter).
@@ -48,7 +58,9 @@ a sherpa-onnx punctuation CLI at `~/punct_cli` and its model. Without them the r
 
 ## License
 
-GNU GPL v3 (see `LICENSE`). Copyright notices in the source files are unchanged.
+The code is GNU GPL v3 (see `LICENSE`, copied unchanged from [lokutor-ai/oido](https://github.com/lokutor-ai/oido)). Copyright notices in the source files are unchanged.
+
+Model weights are not in this repository. Each one is licensed by Lokutor as listed under Credits (CC-BY-4.0 or CC-BY-SA-4.0).
 
 ## Prebuilt phone binaries (phone/bin)
 
