@@ -1,3 +1,6 @@
+#if defined(__ARM_NEON)
+#include <arm_neon.h>
+#endif
 // tasr_nemo: utterance-level engine for NVIDIA NeMo Conformer-CTC small (rel-pos MHSA, full context), int8.
 // Mirrors train/nemo_small.py + train/nemo_eval.py (--bits 8 --att8) arithmetic.
 #include <math.h>
@@ -440,11 +443,36 @@ static void natt_job(void *p, int b, int e, int w)
             const float A = squ * scale, B = sqv * scale;
             const float *spm = sp + m0;
             float mx = -1e30f;
+#if defined(__ARM_NEON)
+            {
+                // NEON: same float operations in the same order (no FMA: -ffp-contract=off), 4 lanes at a time
+                const float32x4_t vA = vdupq_n_f32(A), vB = vdupq_n_f32(B);
+                float32x4_t vmx = vdupq_n_f32(-1e30f);
+                int j = 0;
+                for (; j + 4 <= T; j += 4) {
+                    float32x4_t fa = vcvtq_f32_s32(vld1q_s32(ia + j));
+                    float32x4_t fb = vcvtq_f32_s32(vld1q_s32(ib + j));
+                    float32x4_t a = vaddq_f32(vmulq_f32(vmulq_f32(fa, vA), vld1q_f32(sk + j)),
+                                              vmulq_f32(vmulq_f32(fb, vB), vld1q_f32(spm + j)));
+                    vst1q_f32(sc + j, a);
+                    vmx = vmaxq_f32(vmx, a);
+                }
+                float tmp[4];
+                vst1q_f32(tmp, vmx);
+                for (int l = 0; l < 4; l++) mx = tmp[l] > mx ? tmp[l] : mx;
+                for (; j < T; j++) {
+                    float a = (float)ia[j] * A * sk[j] + (float)ib[j] * B * spm[j];
+                    sc[j] = a;
+                    mx = a > mx ? a : mx;
+                }
+            }
+#else
             for (int j = 0; j < T; j++) {
                 float a = (float)ia[j] * A * sk[j] + (float)ib[j] * B * spm[j];
                 sc[j] = a;
                 mx = a > mx ? a : mx;
             }
+#endif
             float sum = 0.f, pm = 0.f;
             const float mx64 = mx * NEXP_STEPS + 0.5f;
             for (int j = 0; j < T; j++) {
