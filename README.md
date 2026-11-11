@@ -3,6 +3,17 @@
 Build the C speech engine on a phone (Termux) or on a Pi 400, and use it from nano:
 Ctrl+T records a few seconds and replaces `[oido]` with the transcript.
 
+## Speed at a glance
+
+Wall-clock time to transcribe a 10-second clip, median of 10 runs, beam 4 with the language model (full table and method in [BENCHMARKS.md](BENCHMARKS.md)):
+
+| Hardware | This build | Upstream oido v2a | Upstream oido v2b |
+|---|---|---|---|
+| Raspberry Pi 400, 3 cores | 529 ms | 929 ms | 757 ms |
+| Android phone, 4 fast cores | 141 ms | 166 ms | 150 ms |
+
+On the Pi this build is the fastest in wall-clock time. v2 uses less CPU time but finishes later. Only one clip is shown; these are not word-error benchmarks.
+
 ## Credits
 
 This is a fork of **Oído** by Lokutor ([lokutor-ai/oido](https://github.com/lokutor-ai/oido), GPL-3.0). The speech engine, models, and original documentation are Lokutor's work. Changes in this repo, including the Raspberry Pi 400 and Android (Termux) builds, the nano dictation hook, and the phone scripts, are by tarel.
@@ -26,7 +37,8 @@ Model weights are from Lokutor's Hugging Face pages:
 - `phone/oido_web.py`: small web server with punctuation.
 - `phone/transcribe.py`: batch transcription of 16 kHz WAV files.
 - `phone/transcribe_apollo.sh`: long-file test script.
-- `docs/phone-benchmarks.md`: measured numbers and the changes behind them.
+- `BENCHMARKS.md`: timing method, Pi and phone results, and comparison with upstream v2.
+- `docs/phone-benchmarks.md`: measured numbers and the changes behind them (Part 2, sanoTTS heart, is not part of this engine).
 
 ## Model files (not included)
 
