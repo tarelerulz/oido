@@ -21,7 +21,9 @@
 ## 4. NEON Prefetch + 2-Row Unroll for Cortex-A72 (Pi 400)
 - tasr_gemm_blk16 NEON: __builtin_prefetch(pw+128) in k-loop
 - tasr_dot48_rows NEON: 2-row unroll to overlap loads in A72 pipeline
-- Result: NEON path 9.5x -> 12.8x RTFx (+35%)
+- Result on the Pi 400 (wall clock, 10 s clip, medians, transcripts identical): about 13% faster at 1 thread (1.646 s -> 1.438 s) and about 5-7% faster at 4 threads (0.633 s -> 0.589 s).
+- The earlier "+35%" figure was measured on a phone with the NEON path forced (`-march=armv8-a`), not on the Pi. It is not the Pi result; see BENCHMARKS.md.
+- Tried and rejected on the Pi (all within about 5% noise or worse): `-mcpu=cortex-a72`, `-O2` instead of `-O3` (about 10% slower), prefetch in the x-stationary GEMM, 2-row unroll in attention.
 
 ## Measured RTFx (apollo11 audio, 4-second clip, phone)
 - nemo8 (int8, 14MB): 1t=51x, 4t=121x
