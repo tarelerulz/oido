@@ -76,7 +76,7 @@ Audio must be 16 kHz mono 16-bit WAV. Multi-threaded: `TASR_THREADS=4` (default:
 Optional punctuation (used by `phone/oido_nano.sh` and `phone/oido_web.py` if present):
 a sherpa-onnx punctuation CLI at `~/punct_cli` and its model. Without them the raw text is used.
 
-`phone/oido_web.py` listens on `127.0.0.1:5000` (this device only). Set `OIDO_WEB_HOST=0.0.0.0` to reach it from other devices.
+`phone/oido_web.py` listens on `127.0.0.1:5000` (this device only), sends no CORS header, and refuses POSTs from other websites or with a foreign `Host`. Set `OIDO_WEB_HOST=0.0.0.0` to reach it from other devices.
 
 ## Raspberry Pi 5
 
