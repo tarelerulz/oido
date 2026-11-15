@@ -15,3 +15,4 @@ __pycache__/
 
 # Local recordings (may contain voice)
 *.wav
+!samples/jfk.wav
