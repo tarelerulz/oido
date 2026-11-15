@@ -90,10 +90,12 @@ Wall-clock time for that command, median of 10 runs (min to max), measured 2026-
 | Device | Build | Time | Speed vs real time |
 |---|---|---|---|
 | Raspberry Pi 400, 3 cores | `tasr_cli_a72` (NEON) | 597 ms (561–636) | about 18× |
+| Pixel 9, Linux Terminal VM, 4 threads on cores 4 to 7 | `tasr_cli_phone` (dotprod) | 130 ms (118–336) | about 85× |
+| Pixel 9, Linux Terminal VM, 4 threads on cores 4 to 7 | NEON only (`-march=armv8-a`) | 170 ms (160–306) | about 65× |
 | Pixel 9, Termux, 2 threads | `tasr_cli_phone` (dotprod) | 398 ms (271–473) | about 28× |
 | Pixel 9, Termux, 2 threads | NEON only (`-march=armv8-a`) | 495 ms (338–580) | about 22× |
 
-Dotprod was faster than NEON-only at every thread count tried, by about 10 to 20%. The Pixel 9 numbers were measured over SSH, where Android let Termux use cores 0 to 6 but not the fast core 7. With the default four threads this build then took about 1.0 s, because four threads share only three fast cores. If the phone build is slow for you, try `TASR_THREADS=2` or `TASR_THREADS=3`. The 141 ms figure above (inside the Linux Terminal VM, which has all four fast cores) is for a different 10 s clip and is not directly comparable. No Raspberry Pi 5 numbers exist yet.
+Dotprod was faster than NEON-only at every thread count tried, by about 10 to 30%. The Pixel 9 numbers were measured over SSH, where Android let Termux use cores 0 to 6 but not the fast core 7. With the default four threads this build then took about 1.0 s, because four threads share only three fast cores. If the phone build is slow for you, try `TASR_THREADS=2` or `TASR_THREADS=3`. The Linux Terminal VM rows (all four fast cores available, pinned with `taskset -c 4-7`, median of 30 runs alternating the two builds) were measured on 2026-11-14 with a build of this repository; single runs varied by up to 2×, so treat them as roughly 100 to 150 ms. The 141 ms figure in the speed table above is for a different, unpublished 10 s clip; on that clip the same VM setup gave 118 ms with dotprod and 159 ms NEON-only on 2026-11-14. No Raspberry Pi 5 numbers exist yet.
 
 ## Raspberry Pi 5
 
