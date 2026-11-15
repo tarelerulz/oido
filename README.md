@@ -14,6 +14,8 @@ Wall-clock time to transcribe a 10-second clip, median of 10 runs, beam 4 with t
 
 On the Pi this build is the fastest in wall-clock time. v2 uses less CPU time but finishes later. Only one clip is shown; these are not word-error benchmarks.
 
+**GPU:** the encoder also runs on the Pi 400's GPU, level with the CPU on a 10 s clip (0.55 s vs 0.58 s wall) with the CPU cores almost idle. See [Running on the Pi 400 GPU](#running-on-the-pi-400-gpu-experimental) and the [full write-up](https://github.com/tarelerulz/gpu-port-kit/blob/main/OIDO_GPU_STORY.md).
+
 ## Credits
 
 This is a fork of **Oído** by Lokutor ([lokutor-ai/oido](https://github.com/lokutor-ai/oido), GPL-3.0). The speech engine, models, and original documentation are Lokutor's work. Changes in this repo, including the Raspberry Pi 400 and Android (Termux) builds, the nano dictation hook, and the phone scripts, are by tarel.
@@ -37,6 +39,7 @@ Model weights are from Lokutor's Hugging Face pages:
 - `phone/oido_web.py`: small web server with punctuation.
 - `phone/transcribe.py`: batch transcription of 16 kHz WAV files.
 - `phone/transcribe_apollo.sh`: long-file test script.
+- `port/gpu/`: GPU (Vulkan, Pi 400) work; the story and the code are in [gpu-port-kit](https://github.com/tarelerulz/gpu-port-kit) ([OIDO_GPU_STORY.md](https://github.com/tarelerulz/gpu-port-kit/blob/main/OIDO_GPU_STORY.md)).
 - `BENCHMARKS.md`: timing method, Pi and phone results, and comparison with upstream v2.
 - `docs/phone-benchmarks.md`: measured numbers and the changes behind them (Part 2, sanoTTS heart, is not part of this engine).
 
