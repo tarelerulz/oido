@@ -221,16 +221,23 @@ function sendEmail() {
 </html>"""
 
 def add_punctuation(text):
+    # Without the optional punctuation tool (see README) or if it fails, the raw text is returned.
+    if not (os.path.isfile(PUNCT_CLI) and os.path.isfile(PUNCT_MODEL)):
+        return text
     paragraphs = [p.strip() for p in text.split('\n') if p.strip()]
     results = []
-    with _punct_lock:
-        proc = get_punct_proc()
-        for p in paragraphs:
-            line = ' '.join(p.split())
-            proc.stdin.write(line + '\n')
-            proc.stdin.flush()
-            result = proc.stdout.readline().rstrip('\n')
-            results.append(result if result.strip() else p)
+    try:
+        with _punct_lock:
+            proc = get_punct_proc()
+            for p in paragraphs:
+                line = ' '.join(p.split())
+                proc.stdin.write(line + '\n')
+                proc.stdin.flush()
+                result = proc.stdout.readline().rstrip('\n')
+                results.append(result if result.strip() else p)
+    except (OSError, ValueError) as e:   # tool missing, not executable, or died mid-request
+        print('punctuation unavailable:', e)
+        return text
     return '\n'.join(results)
 
 def wav_wrap(pcm_bytes, rate=16000, ch=1, bits=16):
