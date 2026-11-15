@@ -149,7 +149,10 @@ function stopRec() {
     body: pcm.buffer,
     headers: { 'Content-Type': 'application/octet-stream' }
   })
-  .then(r => r.text())
+  .then(r => r.text().then(t => {
+    if (!r.ok) throw new Error(t || ('server returned ' + r.status));
+    return t;
+  }))
   .then(t => {
     if (t && t !== '[no speech]') {
       const el = document.getElementById('body');
@@ -279,15 +282,28 @@ class H(http.server.BaseHTTPRequestHandler):
             self.wfile.write(result.encode())
             return
         pcm = self.rfile.read(int(self.headers.get('Content-Length', 0)))
+        missing = [p for p in (CLI, MODEL, LM) if not os.path.isfile(p)]
+        if missing:
+            self.reply(500, 'Speech engine not set up, missing: ' + ', '.join(missing) + ' (see the README)')
+            return
         with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as f:
             f.write(wav_wrap(pcm)); tmp = f.name
         try:
             out = subprocess.run([CLI, MODEL, "--lm", LM, tmp], capture_output=True, text=True)
-            line = out.stdout.strip().split('\n')[-1] if out.stdout.strip() else ''
-            text = line.split('\t')[-1] if '\t' in line else line or '[no speech]'
+        except OSError as e:
+            self.reply(500, 'Could not run the speech engine: %s' % e)
+            return
         finally:
             os.unlink(tmp)
-        self.send_response(200)
+        if out.returncode != 0 and not out.stdout.strip():
+            self.reply(500, 'Speech engine failed: ' + (out.stderr.strip().split('\n')[-1] or 'exit %d' % out.returncode))
+            return
+        line = out.stdout.strip().split('\n')[-1] if out.stdout.strip() else ''
+        text = line.split('\t')[-1] if '\t' in line else line or '[no speech]'
+        self.reply(200, text)
+
+    def reply(self, code, text):
+        self.send_response(code)
         self.send_header('Content-Type', 'text/plain; charset=utf-8')
         self.end_headers()
         self.wfile.write(text.encode())
