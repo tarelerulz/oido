@@ -80,7 +80,7 @@ a sherpa-onnx punctuation CLI at `~/punct_cli` and its model. Without them the r
 
 ## Raspberry Pi 5
 
-Not tested. The Pi 5's Cortex-A76 has the ARMv8.2 dot-product instructions, so `make tasr_cli_phone` (the phone build, which uses them) should work there and be faster than the Pi 400 build, but nobody has run it yet. If you try it, please open an issue with the transcript and timing. (`make tasr_cli_a72` should also work, since it only needs NEON.)
+Not tested on a Pi 5. The Pi 5's Cortex-A76 has the ARMv8.2 dot-product instructions, so `make tasr_cli_phone` (the phone build, which uses them) should work there. As a stand-in, that build was compiled and run on 2026-11-14 on an Android phone (Pixel 9, Termux, ARMv8.2 with dot product): it built from a clean copy of this repo in about 10 s and transcribed the 11 s JFK sample correctly, the same text as the Pi 400 build. That shows the code and Makefile work on an ARMv8.2 + dotprod CPU, not that a Pi 5 does. If you try it on a Pi 5, please open an issue with the transcript and timing. (`make tasr_cli_a72` should also work, since it only needs NEON.)
 
 ## Build for Pi 400 (Cortex-A72, NEON only)
 
