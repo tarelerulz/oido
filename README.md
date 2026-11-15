@@ -84,7 +84,7 @@ How it got there (data layout, turning every heavy step into one matrix multiply
 3. Run the kit's checks with `python3 tests/check_runner.py`, then `python3 tests/run_all.py`.
 4. To transcribe a clip with the GPU encoder: `python3 port/gpu_encoder2.py clip.raw` (16 kHz mono 16-bit raw audio).
 
-Be aware that this is research code, not an installer. Step 4 and the nemo8 tests also need the older speech-app shader folder, which is not published; the kit README lists the paths and environment variables to set. It has not been tested from a fresh clone. The numbers above come from the author's Pi 400. If something does not work, please open an issue.
+Be aware that this is research code, not an installer. Step 4 and the nemo8 tests also need the older speech-app shaders: build them with `sh tools/build_speech_app_shaders.sh` in the kit (sources are in `shaders/speech-app/`). The kit README lists the paths and environment variables to set. It has not been tested from a fresh clone. The numbers above come from the author's Pi 400. If something does not work, please open an issue.
 
 ## License
 
