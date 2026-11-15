@@ -68,6 +68,12 @@ a sherpa-onnx punctuation CLI at `~/punct_cli` and its model. Without them the r
     make tasr_cli_a72
     bash pi400_setup.sh   # also installs ~/oido_nano.sh
 
+## Running on the Pi 400 GPU (experimental)
+
+The encoder also runs on the Pi 400's GPU (V3D 4.2, via Vulkan), with the CPU cores almost idle. On a 10-second clip the GPU path took 0.54 s of GPU time on 2026-11-13 (wall time 0.55 s against 0.58 s for the CPU build), down from 3.3 s for the first working version. On a 5-second clip it was 0.30 s against 0.28 s on the CPU. It gives the same text as the CPU build on the test clips. It is not faster than the CPU on this board, only level with it. It has not been voice-tested in daily dictation.
+
+How it got there (data layout, turning every heavy step into one matrix multiply, a hand-written QPU assembly matmul, a higher GPU clock, then removing wasted work and jobs, plus what did not help) is written up in [OIDO_GPU_STORY.md](https://github.com/tarelerulz/gpu-port-kit/blob/add-oido-port/OIDO_GPU_STORY.md). The code and benchmarks are in [gpu-port-kit](https://github.com/tarelerulz/gpu-port-kit). The link points at the `add-oido-port` branch until that branch is merged.
+
 ## License
 
 The code is GNU GPL v3 (see `LICENSE`, copied unchanged from [lokutor-ai/oido](https://github.com/lokutor-ai/oido)). Copyright notices in the source files are unchanged.
