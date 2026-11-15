@@ -10,7 +10,7 @@ Wall-clock time to transcribe a 10-second clip, median of 10 runs, beam 4 with t
 | Hardware | This build | Upstream oido v2a | Upstream oido v2b |
 |---|---|---|---|
 | Raspberry Pi 400, 3 cores | 529 ms | 929 ms | 757 ms |
-| Android phone, 4 fast cores | 141 ms | 166 ms | 150 ms |
+| Android phone (Pixel 9, Linux Terminal VM), 4 fast cores | 141 ms | 166 ms | 150 ms |
 
 On the Pi this build is the fastest in wall-clock time. v2 uses less CPU time but finishes later. Only one clip is shown; these are not word-error benchmarks.
 
@@ -77,6 +77,23 @@ Optional punctuation (used by `phone/oido_nano.sh` and `phone/oido_web.py` if pr
 a sherpa-onnx punctuation CLI at `~/punct_cli` and its model. Without them the raw text is used.
 
 `phone/oido_web.py` listens on `127.0.0.1:5000` (this device only), sends no CORS header, and refuses POSTs from other websites or with a foreign `Host`. Set `OIDO_WEB_HOST=0.0.0.0` to reach it from other devices.
+
+## What you should see
+
+Try it on the public sample `samples/jfk.wav` (11 s, 16 kHz mono; the first sentence of a 1961 speech by US President Kennedy, from the whisper.cpp repository, MIT). With `nemo8.tnm` and `nemo_lm.tlm` (see [Model files](#model-files-not-included) for the SHA-256 values) the output is:
+
+    $ ./tasr_cli_a72 nemo8.tnm --lm nemo_lm.tlm --beam 4 samples/jfk.wav
+    samples/jfk.wav	and so my fellow americans ask not what your country can do for you ask what you can do for your country
+
+Wall-clock time for that command, median of 10 runs (min to max), measured 2026-11-14:
+
+| Device | Build | Time | Speed vs real time |
+|---|---|---|---|
+| Raspberry Pi 400, 3 cores | `tasr_cli_a72` (NEON) | 597 ms (561–636) | about 18× |
+| Pixel 9, Termux, 2 threads | `tasr_cli_phone` (dotprod) | 398 ms (271–473) | about 28× |
+| Pixel 9, Termux, 2 threads | NEON only (`-march=armv8-a`) | 495 ms (338–580) | about 22× |
+
+Dotprod was faster than NEON-only at every thread count tried, by about 10 to 20%. The Pixel 9 numbers were measured over SSH, where Android let Termux use cores 0 to 6 but not the fast core 7. With the default four threads this build then took about 1.0 s, because four threads share only three fast cores. If the phone build is slow for you, try `TASR_THREADS=2` or `TASR_THREADS=3`. The 141 ms figure above (inside the Linux Terminal VM, which has all four fast cores) is for a different 10 s clip and is not directly comparable. No Raspberry Pi 5 numbers exist yet.
 
 ## Raspberry Pi 5
 
