@@ -77,14 +77,14 @@ The encoder also runs on the Pi 400's GPU (V3D 4.2, via Vulkan), with the CPU co
 
 How it got there (data layout, turning every heavy step into one matrix multiply, a hand-written QPU assembly matmul, a higher GPU clock, then removing wasted work and jobs, plus what did not help) is written up in [OIDO_GPU_STORY.md](https://github.com/tarelerulz/gpu-port-kit/blob/main/OIDO_GPU_STORY.md). The code and benchmarks are in [gpu-port-kit](https://github.com/tarelerulz/gpu-port-kit).
 
-**Trying it yourself.** You need a Raspberry Pi 4 or 400 (V3D 4.2) with a Vulkan loader, `glslc`, Python 3 with numpy and a C compiler. In short:
+**Trying it yourself.** You need a Raspberry Pi 4 or 400 (V3D 4.2) with Vulkan, `glslc`, Python 3 with numpy and a C compiler. In short:
 
-1. Clone gpu-port-kit and build the runner: `sh tools/build_exec_server.sh` (the full steps are in its README).
-2. Get the nemo8 weights from [Hugging Face](https://huggingface.co/lokutor-ai/oido-ctc-small-int8) and point `OIDO_MODEL` at the file.
-3. Run the kit's checks with `python3 tests/check_runner.py`, then `python3 tests/run_all.py`.
-4. To transcribe a clip with the GPU encoder: `python3 port/gpu_encoder2.py clip.raw` (16 kHz mono 16-bit raw audio).
+1. Clone [gpu-port-kit](https://github.com/tarelerulz/gpu-port-kit) and build: `sh tools/build_exec_big.sh && sh tools/build_exec_server.sh && sh tools/build_exec_hybrid.sh && sh tools/build_speech_app_shaders.sh`.
+2. Download the nemo8 weights from [Hugging Face](https://huggingface.co/lokutor-ai/oido-ctc-small-int8) and set `GPUPORT_MODEL` to the file.
+3. Run the checks: `python3 tests/run_all.py` (about 2 minutes, ends with `ALL KIT CHECKS PASS`).
+4. Transcribe a clip: `python3 tools/transcribe.py clip.wav` (16 kHz mono 16-bit WAV). Add `GPUPORT_ASM=1` for the fast hand-written matmul.
 
-Be aware that this is research code, not an installer. Step 4 and the nemo8 tests also need the older speech-app shaders: build them with `sh tools/build_speech_app_shaders.sh` in the kit (sources are in `shaders/speech-app/`). The kit README lists the paths and environment variables to set. It has not been tested from a fresh clone. The numbers above come from the author's Pi 400. If something does not work, please open an issue.
+On 2026-11-14 these steps were run from a fresh clone with an empty home folder on the author's Pi 400: the checks pass and the 11 s JFK sample comes out right in 1.2 s of GPU time (0.7 s with `GPUPORT_ASM=1`), the same text as the CPU build. The Vulkan folders were still the author's, so a stock Raspberry Pi OS install was not tested. This is research code, not an installer; the kit README has the details and the environment variables. If something does not work, please open an issue.
 
 ## License
 
