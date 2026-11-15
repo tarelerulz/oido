@@ -276,5 +276,7 @@ class H(http.server.BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         print(fmt % args)
 
-print("Oido email composer on http://localhost:5000")
-http.server.HTTPServer(('0.0.0.0', 5000), H).serve_forever()
+# Listens on this device only. To use it from another device on your network, set OIDO_WEB_HOST=0.0.0.0 (anyone on that network can then use it).
+HOST = os.environ.get('OIDO_WEB_HOST', '127.0.0.1')
+print(f"Oido email composer on http://{HOST}:5000")
+http.server.HTTPServer((HOST, 5000), H).serve_forever()

@@ -50,13 +50,24 @@ The CLI needs a `.tnm` model and optionally a `.tlm` language model. Put them wh
 - phone: `~/tasr_bench/nemo8.tnm` and `/sdcard/oido/models/nemo_lm.tlm`
 - Pi 400: `~/oido/models/nemo8.tnm` and `~/oido/models/nemo_lm.tlm`
 
+The models are on Hugging Face ([int8](https://huggingface.co/lokutor-ai/oido-ctc-small-int8), [int4](https://huggingface.co/lokutor-ai/oido-ctc-small-int4), [streaming](https://huggingface.co/lokutor-ai/oido-ctc-small-stream-int8)). To check a download, compare its SHA-256 (`sha256sum file`):
+
+| file | SHA-256 |
+|---|---|
+| `nemo8.tnm` | `452e332e21f46f161e383a1f26f36294785b2782cb3252928841dd7e6480c68b` |
+| `nemo_lm.tlm` | `00f174f83ad70d865301304fd51897839c542d6f887f8e93e4e1b83938566a1f` |
+| `nemo4.tnm` | `e6fad1c3a1c0065add9fe3c9f10d6fa075b09b27c11f1a830b35f31fabf7d5e9` |
+| `oido_stream.tnm` | `d815ad97ab3def101a267531db0778395c7e8eab9c09571ae4cabca71f5faa11` |
+
+These are the hashes Hugging Face lists for those files; the author's own copies match them.
+
 Paths are set at the top of each script.
 
 ## Build the phone version (Termux, aarch64, ARMv8.2 + dotprod)
 
     pkg install clang make python
     cd host
-    make tasr_cli_phone
+    make tasr_cli_phone   # builds host/tasr_cli_phone (prebuilt copies are in phone/bin)
     mkdir -p ~/tasr_bench && cp tasr_cli_phone ~/tasr_bench/tasr_cli_1t
     ./tasr_cli_phone /path/to/nemo8.tnm --lm /path/to/nemo_lm.tlm /path/to/audio16k.wav
 
@@ -64,6 +75,12 @@ Audio must be 16 kHz mono 16-bit WAV. Multi-threaded: `TASR_THREADS=4` (default:
 
 Optional punctuation (used by `phone/oido_nano.sh` and `phone/oido_web.py` if present):
 a sherpa-onnx punctuation CLI at `~/punct_cli` and its model. Without them the raw text is used.
+
+`phone/oido_web.py` listens on `127.0.0.1:5000` (this device only). Set `OIDO_WEB_HOST=0.0.0.0` to reach it from other devices.
+
+## Raspberry Pi 5
+
+Not tested. The Pi 5's Cortex-A76 has the ARMv8.2 dot-product instructions, so `make tasr_cli_phone` (the phone build, which uses them) should work there and be faster than the Pi 400 build, but nobody has run it yet. If you try it, please open an issue with the transcript and timing. (`make tasr_cli_a72` should also work, since it only needs NEON.)
 
 ## Build for Pi 400 (Cortex-A72, NEON only)
 
