@@ -77,6 +77,15 @@ The encoder also runs on the Pi 400's GPU (V3D 4.2, via Vulkan), with the CPU co
 
 How it got there (data layout, turning every heavy step into one matrix multiply, a hand-written QPU assembly matmul, a higher GPU clock, then removing wasted work and jobs, plus what did not help) is written up in [OIDO_GPU_STORY.md](https://github.com/tarelerulz/gpu-port-kit/blob/main/OIDO_GPU_STORY.md). The code and benchmarks are in [gpu-port-kit](https://github.com/tarelerulz/gpu-port-kit).
 
+**Trying it yourself.** You need a Raspberry Pi 4 or 400 (V3D 4.2) with a Vulkan loader, `glslc`, Python 3 with numpy and a C compiler. In short:
+
+1. Clone gpu-port-kit and build the runner: `sh tools/build_exec_server.sh` (the full steps are in its README).
+2. Get the nemo8 weights from [Hugging Face](https://huggingface.co/lokutor-ai/oido-ctc-small-int8) and point `OIDO_MODEL` at the file.
+3. Run the kit's checks with `python3 tests/check_runner.py`, then `python3 tests/run_all.py`.
+4. To transcribe a clip with the GPU encoder: `python3 port/gpu_encoder2.py clip.raw` (16 kHz mono 16-bit raw audio).
+
+Be aware that this is research code, not an installer. Step 4 and the nemo8 tests also need the older speech-app shader folder, which is not published; the kit README lists the paths and environment variables to set. It has not been tested from a fresh clone. The numbers above come from the author's Pi 400. If something does not work, please open an issue.
+
 ## License
 
 The code is GNU GPL v3 (see `LICENSE`, copied unchanged from [lokutor-ai/oido](https://github.com/lokutor-ai/oido)). Copyright notices in the source files are unchanged.
