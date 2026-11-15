@@ -248,13 +248,26 @@ class H(http.server.BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(HTML)
 
+    def allowed(self):
+        # The page is served by this same server, so no cross-site access is needed (no CORS header is sent).
+        # Refuse POSTs that come from another website (Origin must match Host), and, when listening on this
+        # device only, requests whose Host is not localhost (blocks DNS-rebinding pages).
+        host = self.headers.get('Host', '')
+        origin = self.headers.get('Origin')
+        if origin is not None and origin != 'http://' + host:
+            return False
+        if HOST == '127.0.0.1' and host.rsplit(':', 1)[0] not in ('127.0.0.1', 'localhost'):
+            return False
+        return True
+
     def do_POST(self):
+        if not self.allowed():
+            self.send_response(403); self.end_headers(); return
         if self.path == '/punct':
             text = self.rfile.read(int(self.headers.get('Content-Length', 0))).decode()
             result = add_punctuation(text)
             self.send_response(200)
             self.send_header('Content-Type', 'text/plain; charset=utf-8')
-            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
             self.wfile.write(result.encode())
             return
@@ -269,7 +282,6 @@ class H(http.server.BaseHTTPRequestHandler):
             os.unlink(tmp)
         self.send_response(200)
         self.send_header('Content-Type', 'text/plain; charset=utf-8')
-        self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
         self.wfile.write(text.encode())
 
