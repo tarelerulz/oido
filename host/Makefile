@@ -13,6 +13,10 @@ tasr_cli: tasr_cli.c $(SRC) $(HDR)
 seg_test: seg_test.c $(SRC) $(HDR)
 	$(CC) $(CFLAGS) -o $@ seg_test.c $(SRC) -lm
 
+# Beam search with the language model over CTC scores computed elsewhere (e.g. on the GPU); see tasr_lmdecode.c
+tasr_lmdecode: tasr_lmdecode.c $(SRC) $(HDR)
+	$(CC) $(CFLAGS) -o $@ tasr_lmdecode.c $(SRC) -lm
+
 oled_preview: oled_preview.c ../firmware/main/oled_render.c ../firmware/main/oled.h ../firmware/main/font5x7.h
 	$(CC) -O2 -std=c11 -I../firmware/main oled_preview.c ../firmware/main/oled_render.c -o $@
 
