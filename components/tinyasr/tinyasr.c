@@ -117,6 +117,12 @@ static void pool_parallel(tasr_job_fn fn, void *ctx, int n)
 
 int tasr_set_threads(int n)
 {
+    // Preserve the caller's original taskset/cpuset restriction before we pin it.
+    // Reuse it when resizing the pool: the caller is then pinned to just one core.
+    static cpu_set_t allowed;
+    static int affinity_saved = 0;
+    if (!affinity_saved && sched_getaffinity(0, sizeof(allowed), &allowed) == 0)
+        affinity_saved = 1;
     if (pool.nt > 1) {  // stop the current workers
         tasr_parallel = serial_parallel;
         pool.fn = NULL;
@@ -132,7 +138,7 @@ int tasr_set_threads(int n)
         FILE *f = fopen(path, "r");
         if (!f) break;
         int v = 0;
-        if (fscanf(f, "%d", &v) == 1) {
+        if (fscanf(f, "%d", &v) == 1 && (!affinity_saved || CPU_ISSET(c, &allowed))) {
             int i = nc++;
             for (; i > 0 && cap[i - 1] < v; i--) { cap[i] = cap[i - 1]; pool.cpu[i] = pool.cpu[i - 1]; }
             cap[i] = v; pool.cpu[i] = c;
