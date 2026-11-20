@@ -406,7 +406,7 @@ static inline float qvec(const float *x, int n, int8_t *q, int np)
 }
 static void layernorm_row(const float *r, int d, nln_t p, float *o)
 {
-#if defined(__aarch64__) && !defined(TASR_NO_SIMD)
+#if 0 && defined(__aarch64__)
     float32x4_t s0 = vdupq_n_f32(0.f), s1 = vdupq_n_f32(0.f);
     int i = 0;
     for (; i + 8 <= d; i += 8) {
@@ -1129,17 +1129,24 @@ static void nresln_job(void *p, int b, int e, int w)
 static void ensure_pos_cache(const tasr_nemo_t *m, nctx_t *C, int T)
 {
     npos_cache_t *pc = m->pos_cache;
-    if (!pc || pc->tmax >= T) return;
-    int tmax = T < 320 ? 320 : T;
+    if (!pc || pc->tmax == T) return;
+    int tmax = T;
     int NP = 2 * tmax - 1;
     const int d = m->d, H = m->h, dh = m->dh, dhp = m->dhp;
     float *pe = (float *)tasr_alloc(sizeof(float) * (size_t)NP * d, 0);
     for (int i = 0; i < d / 2; i++) {
         const double div = exp((2.0 * i) * -(log(10000.0) / d));
+        const float cd = (float)cos(div), sd = (float)sin(div);
+        float sn = 0.f, cs = 1.f;
         for (int r = 0; r < NP; r++) {
-            const double a = fmod((double)(tmax - 1 - r) * div, 2.0 * M_PI);
-            pe[(size_t)r * d + 2 * i] = (float)sin(a);
-            pe[(size_t)r * d + 2 * i + 1] = (float)cos(a);
+            if ((r & 63) == 0) {
+                const double a = fmod((double)(T - 1 - r) * div, 2.0 * M_PI);
+                sn = (float)sin(a); cs = (float)cos(a);
+            }
+            pe[(size_t)r * d + 2 * i] = sn;
+            pe[(size_t)r * d + 2 * i + 1] = cs;
+            const float s2 = sn * cd - cs * sd, c2 = cs * cd + sn * sd;
+            sn = s2; cs = c2;
         }
     }
     const int kpp = m->L[0].pos.kp;
