@@ -1,0 +1,134 @@
+items 94
+GPU curve [(1.0, 114), (2.5, 141), (4.0, 239), (5.5, 313), (7.0, 378), (8.5, 452), (10.0, 469), (11.5, 599), (13.0, 743), (14.5, 800), (16.0, 955), (17.5, 1031)]
+CPU curve [(1.0, 34), (2.5, 72), (4.0, 128), (5.5, 171), (7.0, 204), (8.5, 272), (10.0, 492), (11.5, 377), (13.0, 430), (14.5, 489), (16.0, 538), (17.5, 572)]
+  5.1s GPU only:0/239  CPU only:0/149  A live:0/168  C balance any:2/177  D snap .5:2/149  B quiet-balance:0/182  A+overlap:0/220  D+overlap:0/236  stream A (latency):0/94  MIN9 short=GPU:0/239  MIN9 short=CPU:0/149
+  4.6s GPU only:5/243  CPU only:5/131  A live:5/243  C balance any:6/174  D snap .5:5/163  B quiet-balance:5/148  A+overlap:5/243  D+overlap:5/192  stream A (latency):5/243  MIN9 short=GPU:5/243  MIN9 short=CPU:5/131
+  5.7s GPU only:2/312  CPU only:2/169  A live:4/174  C balance any:2/189  D snap .5:3/167  B quiet-balance:4/150  A+overlap:2/221  D+overlap:2/210  stream A (latency):4/95  MIN9 short=GPU:2/312  MIN9 short=CPU:2/169
+  6.4s GPU only:2/368  CPU only:2/186  A live:3/183  C balance any:3/199  D snap .5:3/183  B quiet-balance:3/201  A+overlap:2/230  D+overlap:2/252  stream A (latency):3/114  MIN9 short=GPU:2/368  MIN9 short=CPU:2/186
+  4.7s GPU only:0/245  CPU only:0/132  A live:0/146  C balance any:0/159  D snap .5:0/140  B quiet-balance:0/157  A+overlap:0/236  D+overlap:0/175  stream A (latency):0/67  MIN9 short=GPU:0/245  MIN9 short=CPU:0/132
+  5.0s GPU only:2/245  CPU only:0/146  A live:2/175  C balance any:0/161  D snap .5:2/161  B quiet-balance:0/166  A+overlap:0/222  D+overlap:0/203  stream A (latency):2/98  MIN9 short=GPU:2/245  MIN9 short=CPU:0/146
+  4.6s GPU only:0/252  CPU only:0/133  A live:0/174  C balance any:1/150  D snap .5:0/157  B quiet-balance:0/151  A+overlap:0/227  D+overlap:0/190  stream A (latency):0/78  MIN9 short=GPU:0/252  MIN9 short=CPU:0/133
+  6.7s GPU only:0/388  CPU only:0/199  A live:0/211  C balance any:1/183  D snap .5:0/165  B quiet-balance:0/223  A+overlap:0/249  D+overlap:0/254  stream A (latency):0/106  MIN9 short=GPU:0/388  MIN9 short=CPU:0/199
+  5.6s GPU only:0/311  CPU only:0/176  A live:0/154  C balance any:3/188  D snap .5:2/190  B quiet-balance:2/172  A+overlap:0/233  D+overlap:0/210  stream A (latency):0/163  MIN9 short=GPU:0/311  MIN9 short=CPU:0/176
+  5.2s GPU only:0/329  CPU only:0/148  A live:0/178  C balance any:0/167  D snap .5:0/166  B quiet-balance:0/174  A+overlap:0/194  D+overlap:0/205  stream A (latency):0/125  MIN9 short=GPU:0/329  MIN9 short=CPU:0/148
+  4.5s GPU only:3/231  CPU only:3/129  A live:3/231  C balance any:3/167  D snap .5:3/142  B quiet-balance:6/242  A+overlap:3/231  D+overlap:3/188  stream A (latency):3/231  MIN9 short=GPU:3/231  MIN9 short=CPU:3/129
+  6.3s GPU only:0/338  CPU only:0/183  A live:0/254  C balance any:0/202  D snap .5:0/177  B quiet-balance:0/256  A+overlap:0/254  D+overlap:0/228  stream A (latency):0/88  MIN9 short=GPU:0/338  MIN9 short=CPU:0/183
+  6.1s GPU only:0/336  CPU only:0/180  A live:0/228  C balance any:1/176  D snap .5:0/189  B quiet-balance:2/178  A+overlap:0/255  D+overlap:0/233  stream A (latency):0/82  MIN9 short=GPU:0/336  MIN9 short=CPU:0/180
+  4.6s GPU only:0/234  CPU only:0/132  A live:0/153  C balance any:1/146  D snap .5:0/140  B quiet-balance:0/157  A+overlap:0/176  D+overlap:0/204  stream A (latency):0/91  MIN9 short=GPU:0/234  MIN9 short=CPU:0/132
+  5.0s GPU only:0/247  CPU only:0/144  A live:0/247  C balance any:0/169  D snap .5:0/140  B quiet-balance:0/247  A+overlap:0/247  D+overlap:0/191  stream A (latency):0/247  MIN9 short=GPU:0/247  MIN9 short=CPU:0/144
+  4.5s GPU only:0/241  CPU only:0/130  A live:0/175  C balance any:2/168  D snap .5:0/172  B quiet-balance:0/143  A+overlap:0/225  D+overlap:0/208  stream A (latency):0/78  MIN9 short=GPU:0/241  MIN9 short=CPU:0/130
+  5.1s GPU only:0/254  CPU only:0/146  A live:0/254  C balance any:3/165  D snap .5:0/160  B quiet-balance:0/254  A+overlap:0/254  D+overlap:0/225  stream A (latency):0/254  MIN9 short=GPU:0/254  MIN9 short=CPU:0/146
+  8.8s GPU only:2/455  CPU only:2/265  A live:4/238  C balance any:2/234  D snap .5:2/229  B quiet-balance:2/239  A+overlap:2/268  D+overlap:2/257  stream A (latency):4/176  MIN9 short=GPU:2/455  MIN9 short=CPU:2/265
+ 10.0s GPU only:3/473  CPU only:3/307  A live:3/266  C balance any:8/288  D snap .5:5/268  B quiet-balance:5/251  A+overlap:5/333  D+overlap:3/302  stream A (latency):3/161  MIN9 short=GPU:3/266  MIN9 short=CPU:3/266
+ 10.6s GPU only:5/562  CPU only:7/348  A live:10/268  C balance any:5/261  D snap .5:9/253  B quiet-balance:9/255  A+overlap:7/286  D+overlap:7/277  stream A (latency):10/199  MIN9 short=GPU:10/268  MIN9 short=CPU:10/268
+ 12.5s GPU only:4/681  CPU only:4/394  A live:4/293  C balance any:4/305  D snap .5:4/288  B quiet-balance:2/286  A+overlap:4/363  D+overlap:4/348  stream A (latency):4/219  MIN9 short=GPU:4/293  MIN9 short=CPU:4/293
+ 11.5s GPU only:0/605  CPU only:0/364  A live:2/281  C balance any:2/274  D snap .5:2/289  B quiet-balance:2/282  A+overlap:2/310  D+overlap:2/328  stream A (latency):2/234  MIN9 short=GPU:2/281  MIN9 short=CPU:2/281
+  8.4s GPU only:2/447  CPU only:2/254  A live:2/227  C balance any:2/233  D snap .5:2/227  B quiet-balance:2/216  A+overlap:2/255  D+overlap:2/334  stream A (latency):2/202  MIN9 short=GPU:2/447  MIN9 short=CPU:2/254
+  6.6s GPU only:4/366  CPU only:5/194  A live:5/212  C balance any:9/191  D snap .5:7/165  B quiet-balance:5/209  A+overlap:7/240  D+overlap:7/236  stream A (latency):5/109  MIN9 short=GPU:4/366  MIN9 short=CPU:5/194
+  8.3s GPU only:3/449  CPU only:3/251  A live:7/243  C balance any:5/230  D snap .5:5/215  B quiet-balance:5/219  A+overlap:5/303  D+overlap:5/243  stream A (latency):7/170  MIN9 short=GPU:3/449  MIN9 short=CPU:3/251
+ 10.0s GPU only:0/464  CPU only:0/318  A live:2/256  C balance any:0/254  D snap .5:2/272  B quiet-balance:0/259  A+overlap:2/348  D+overlap:2/303  stream A (latency):2/159  MIN9 short=GPU:2/256  MIN9 short=CPU:2/256
+  8.2s GPU only:0/441  CPU only:0/242  A live:0/240  C balance any:1/221  D snap .5:0/268  B quiet-balance:0/236  A+overlap:0/273  D+overlap:0/270  stream A (latency):0/120  MIN9 short=GPU:0/441  MIN9 short=CPU:0/242
+ 10.3s GPU only:0/550  CPU only:0/321  A live:0/245  C balance any:0/265  D snap .5:0/286  B quiet-balance:0/263  A+overlap:0/277  D+overlap:0/316  stream A (latency):0/195  MIN9 short=GPU:0/245  MIN9 short=CPU:0/245
+ 10.2s GPU only:0/546  CPU only:0/317  A live:0/271  C balance any:0/260  D snap .5:0/240  B quiet-balance:0/243  A+overlap:0/285  D+overlap:0/276  stream A (latency):0/210  MIN9 short=GPU:0/271  MIN9 short=CPU:0/271
+  9.1s GPU only:0/450  CPU only:0/275  A live:0/237  C balance any:0/247  D snap .5:2/244  B quiet-balance:0/252  A+overlap:0/253  D+overlap:0/264  stream A (latency):0/180  MIN9 short=GPU:0/237  MIN9 short=CPU:0/237
+  9.6s GPU only:0/455  CPU only:0/290  A live:0/242  C balance any:1/247  D snap .5:0/251  B quiet-balance:0/260  A+overlap:0/264  D+overlap:0/285  stream A (latency):0/175  MIN9 short=GPU:0/242  MIN9 short=CPU:0/242
+  7.1s GPU only:0/387  CPU only:0/210  A live:0/232  C balance any:0/187  D snap .5:0/194  B quiet-balance:0/195  A+overlap:0/243  D+overlap:0/249  stream A (latency):0/118  MIN9 short=GPU:0/387  MIN9 short=CPU:0/210
+  7.9s GPU only:0/432  CPU only:0/261  A live:0/209  C balance any:0/201  D snap .5:0/214  B quiet-balance:0/207  A+overlap:0/230  D+overlap:0/229  stream A (latency):0/158  MIN9 short=GPU:0/432  MIN9 short=CPU:0/261
+  7.4s GPU only:0/387  CPU only:0/254  A live:0/254  C balance any:0/194  D snap .5:2/211  B quiet-balance:2/209  A+overlap:0/265  D+overlap:0/252  stream A (latency):0/103  MIN9 short=GPU:0/387  MIN9 short=CPU:0/254
+  8.2s GPU only:0/439  CPU only:0/247  A live:2/215  C balance any:0/302  D snap .5:2/227  B quiet-balance:0/197  A+overlap:0/240  D+overlap:0/256  stream A (latency):2/163  MIN9 short=GPU:0/439  MIN9 short=CPU:0/247
+ 10.1s GPU only:3/473  CPU only:3/308  A live:3/258  C balance any:3/249  D snap .5:3/239  B quiet-balance:3/239  A+overlap:3/265  D+overlap:3/283  stream A (latency):3/190  MIN9 short=GPU:3/258  MIN9 short=CPU:3/258
+ 11.2s GPU only:3/601  CPU only:3/361  A live:3/260  C balance any:5/269  D snap .5:3/267  B quiet-balance:3/270  A+overlap:3/341  D+overlap:3/312  stream A (latency):3/221  MIN9 short=GPU:3/260  MIN9 short=CPU:3/260
+ 10.1s GPU only:0/477  CPU only:0/317  A live:0/267  C balance any:0/261  D snap .5:0/251  B quiet-balance:0/277  A+overlap:0/284  D+overlap:0/271  stream A (latency):0/193  MIN9 short=GPU:0/267  MIN9 short=CPU:0/267
+  6.6s GPU only:0/367  CPU only:0/196  A live:0/186  C balance any:0/166  D snap .5:0/164  B quiet-balance:0/185  A+overlap:0/235  D+overlap:0/242  stream A (latency):0/165  MIN9 short=GPU:0/367  MIN9 short=CPU:0/196
+  5.7s GPU only:0/312  CPU only:0/170  A live:2/161  C balance any:0/186  D snap .5:0/173  B quiet-balance:0/187  A+overlap:0/229  D+overlap:0/200  stream A (latency):2/97  MIN9 short=GPU:0/312  MIN9 short=CPU:0/170
+  9.0s GPU only:0/445  CPU only:0/271  A live:0/256  C balance any:0/234  D snap .5:0/245  B quiet-balance:0/238  A+overlap:0/262  D+overlap:0/264  stream A (latency):0/177  MIN9 short=GPU:0/445  MIN9 short=CPU:0/271
+ 11.1s GPU only:0/596  CPU only:0/357  A live:0/291  C balance any:0/278  D snap .5:0/288  B quiet-balance:0/277  A+overlap:0/347  D+overlap:0/295  stream A (latency):0/227  MIN9 short=GPU:0/291  MIN9 short=CPU:0/291
+  8.0s GPU only:0/438  CPU only:0/240  A live:0/248  C balance any:1/210  D snap .5:0/222  B quiet-balance:0/254  A+overlap:0/278  D+overlap:0/255  stream A (latency):0/114  MIN9 short=GPU:0/438  MIN9 short=CPU:0/240
+  6.6s GPU only:0/368  CPU only:0/197  A live:2/181  C balance any:2/196  D snap .5:2/164  B quiet-balance:2/167  A+overlap:2/225  D+overlap:11/244  stream A (latency):2/116  MIN9 short=GPU:0/368  MIN9 short=CPU:0/197
+  7.7s GPU only:0/427  CPU only:0/243  A live:2/209  C balance any:2/187  D snap .5:0/205  B quiet-balance:0/209  A+overlap:2/221  D+overlap:2/229  stream A (latency):2/147  MIN9 short=GPU:0/427  MIN9 short=CPU:0/243
+  6.7s GPU only:2/364  CPU only:0/198  A live:2/185  C balance any:2/184  D snap .5:2/167  B quiet-balance:2/185  A+overlap:2/210  D+overlap:2/216  stream A (latency):2/133  MIN9 short=GPU:2/364  MIN9 short=CPU:0/198
+  7.6s GPU only:2/377  CPU only:2/225  A live:2/217  C balance any:2/194  D snap .5:2/205  B quiet-balance:2/227  A+overlap:2/236  D+overlap:2/242  stream A (latency):2/176  MIN9 short=GPU:2/377  MIN9 short=CPU:2/225
+  8.2s GPU only:0/448  CPU only:0/247  A live:0/258  C balance any:0/238  D snap .5:0/254  B quiet-balance:0/263  A+overlap:0/326  D+overlap:0/269  stream A (latency):0/115  MIN9 short=GPU:0/448  MIN9 short=CPU:0/247
+  7.4s GPU only:0/370  CPU only:0/220  A live:0/198  C balance any:0/179  D snap .5:0/179  B quiet-balance:0/220  A+overlap:0/219  D+overlap:0/244  stream A (latency):0/139  MIN9 short=GPU:0/370  MIN9 short=CPU:0/220
+  8.1s GPU only:0/437  CPU only:0/241  A live:0/262  C balance any:0/256  D snap .5:0/253  B quiet-balance:0/215  A+overlap:8/262  D+overlap:0/253  stream A (latency):0/128  MIN9 short=GPU:0/437  MIN9 short=CPU:0/241
+  6.2s GPU only:6/341  CPU only:6/203  A live:8/175  C balance any:6/179  D snap .5:6/181  B quiet-balance:8/172  A+overlap:6/246  D+overlap:6/234  stream A (latency):8/115  MIN9 short=GPU:6/341  MIN9 short=CPU:6/203
+  7.0s GPU only:6/372  CPU only:6/207  A live:6/177  C balance any:6/196  D snap .5:6/200  B quiet-balance:6/189  A+overlap:6/226  D+overlap:6/212  stream A (latency):6/128  MIN9 short=GPU:6/372  MIN9 short=CPU:6/207
+  8.6s GPU only:4/460  CPU only:4/339  A live:2/260  C balance any:4/241  D snap .5:4/240  B quiet-balance:5/256  A+overlap:2/267  D+overlap:4/262  stream A (latency):2/139  MIN9 short=GPU:4/460  MIN9 short=CPU:4/339
+  8.7s GPU only:4/451  CPU only:4/268  A live:4/237  C balance any:7/237  D snap .5:4/233  B quiet-balance:4/238  A+overlap:4/260  D+overlap:4/248  stream A (latency):4/157  MIN9 short=GPU:4/451  MIN9 short=CPU:4/268
+  7.3s GPU only:3/382  CPU only:3/214  A live:3/208  C balance any:6/244  D snap .5:3/297  B quiet-balance:3/210  A+overlap:0/253  D+overlap:3/248  stream A (latency):3/140  MIN9 short=GPU:3/382  MIN9 short=CPU:3/214
+  7.9s GPU only:0/430  CPU only:0/236  A live:3/195  C balance any:0/207  D snap .5:3/209  B quiet-balance:3/292  A+overlap:3/270  D+overlap:0/294  stream A (latency):3/156  MIN9 short=GPU:0/430  MIN9 short=CPU:0/236
+ 13.8s GPU only:5/772  CPU only:7/490  A live:5/432  C balance any:5/349  D snap .5:5/327  B quiet-balance:5/344  A+overlap:5/402  D+overlap:7/403  stream A (latency):5/300  MIN9 short=GPU:5/432  MIN9 short=CPU:5/432
+ 16.1s GPU only:5/958  CPU only:5/536  A live:7/401  C balance any:9/379  D snap .5:7/391  B quiet-balance:7/394  A+overlap:5/416  D+overlap:5/443  stream A (latency):7/321  MIN9 short=GPU:7/401  MIN9 short=CPU:7/401
+ 17.4s GPU only:9/1004  CPU only:9/600  A live:11/419  C balance any:9/522  D snap .5:13/490  B quiet-balance:9/450  A+overlap:9/463  D+overlap:9/479  stream A (latency):11/318  MIN9 short=GPU:11/419  MIN9 short=CPU:11/419
+ 17.6s GPU only:4/1004  CPU only:4/630  A live:4/447  C balance any:4/436  D snap .5:2/428  B quiet-balance:4/432  A+overlap:9/448  D+overlap:2/475  stream A (latency):4/345  MIN9 short=GPU:4/447  MIN9 short=CPU:4/447
+ 15.2s GPU only:4/804  CPU only:4/504  A live:4/360  C balance any:4/369  D snap .5:4/362  B quiet-balance:4/365  A+overlap:4/418  D+overlap:4/399  stream A (latency):4/284  MIN9 short=GPU:4/360  MIN9 short=CPU:4/360
+ 11.7s GPU only:7/648  CPU only:7/368  A live:7/262  C balance any:8/283  D snap .5:5/267  B quiet-balance:5/259  A+overlap:9/337  D+overlap:5/336  stream A (latency):7/215  MIN9 short=GPU:7/262  MIN9 short=CPU:7/262
+ 12.0s GPU only:4/655  CPU only:2/380  A live:5/289  C balance any:6/301  D snap .5:5/306  B quiet-balance:5/290  A+overlap:5/328  D+overlap:5/340  stream A (latency):5/253  MIN9 short=GPU:5/289  MIN9 short=CPU:5/289
+ 13.3s GPU only:3/739  CPU only:3/438  A live:6/350  C balance any:9/314  D snap .5:3/340  B quiet-balance:6/340  A+overlap:3/353  D+overlap:3/396  stream A (latency):6/248  MIN9 short=GPU:6/350  MIN9 short=CPU:6/350
+ 13.6s GPU only:0/771  CPU only:0/452  A live:2/355  C balance any:2/325  D snap .5:2/323  B quiet-balance:2/344  A+overlap:10/376  D+overlap:12/369  stream A (latency):2/270  MIN9 short=GPU:2/355  MIN9 short=CPU:2/355
+ 15.3s GPU only:0/764  CPU only:0/515  A live:0/402  C balance any:0/376  D snap .5:0/380  B quiet-balance:0/375  A+overlap:0/418  D+overlap:0/392  stream A (latency):0/311  MIN9 short=GPU:0/402  MIN9 short=CPU:0/402
+ 13.9s GPU only:0/782  CPU only:0/473  A live:0/386  C balance any:2/350  D snap .5:2/337  B quiet-balance:0/376  A+overlap:0/400  D+overlap:0/391  stream A (latency):0/215  MIN9 short=GPU:0/386  MIN9 short=CPU:0/386
+ 16.2s GPU only:0/969  CPU only:0/549  A live:0/386  C balance any:2/399  D snap .5:0/408  B quiet-balance:0/392  A+overlap:0/413  D+overlap:0/417  stream A (latency):0/303  MIN9 short=GPU:0/386  MIN9 short=CPU:0/386
+ 13.1s GPU only:0/756  CPU only:0/428  A live:0/338  C balance any:0/307  D snap .5:2/303  B quiet-balance:0/346  A+overlap:0/383  D+overlap:0/361  stream A (latency):0/278  MIN9 short=GPU:0/338  MIN9 short=CPU:0/338
+ 13.1s GPU only:0/744  CPU only:0/428  A live:0/374  C balance any:3/328  D snap .5:0/334  B quiet-balance:0/285  A+overlap:0/350  D+overlap:0/368  stream A (latency):0/247  MIN9 short=GPU:0/374  MIN9 short=CPU:0/374
+ 11.9s GPU only:0/643  CPU only:0/375  A live:0/276  C balance any:0/311  D snap .5:0/318  B quiet-balance:0/283  A+overlap:0/363  D+overlap:0/315  stream A (latency):0/221  MIN9 short=GPU:0/276  MIN9 short=CPU:0/276
+ 10.9s GPU only:0/590  CPU only:0/360  A live:0/276  C balance any:0/272  D snap .5:0/281  B quiet-balance:0/269  A+overlap:0/286  D+overlap:0/338  stream A (latency):0/210  MIN9 short=GPU:0/276  MIN9 short=CPU:0/276
+ 13.0s GPU only:0/744  CPU only:0/414  A live:0/295  C balance any:0/301  D snap .5:0/314  B quiet-balance:0/277  A+overlap:0/381  D+overlap:0/355  stream A (latency):0/236  MIN9 short=GPU:0/295  MIN9 short=CPU:0/295
+ 13.1s GPU only:3/753  CPU only:3/435  A live:3/303  C balance any:3/354  D snap .5:3/316  B quiet-balance:3/313  A+overlap:3/343  D+overlap:3/359  stream A (latency):3/262  MIN9 short=GPU:3/303  MIN9 short=CPU:3/303
+ 16.8s GPU only:3/1000  CPU only:3/559  A live:3/405  C balance any:3/418  D snap .5:3/420  B quiet-balance:3/405  A+overlap:3/438  D+overlap:3/417  stream A (latency):3/341  MIN9 short=GPU:3/405  MIN9 short=CPU:3/405
+ 15.0s GPU only:3/791  CPU only:3/552  A live:3/367  C balance any:3/373  D snap .5:3/395  B quiet-balance:3/377  A+overlap:3/401  D+overlap:3/415  stream A (latency):3/315  MIN9 short=GPU:3/367  MIN9 short=CPU:3/367
+ 13.3s GPU only:0/737  CPU only:0/460  A live:0/333  C balance any:1/303  D snap .5:0/301  B quiet-balance:0/315  A+overlap:0/382  D+overlap:0/356  stream A (latency):0/226  MIN9 short=GPU:0/333  MIN9 short=CPU:0/333
+  9.5s GPU only:0/462  CPU only:0/290  A live:0/231  C balance any:0/257  D snap .5:0/243  B quiet-balance:0/231  A+overlap:0/261  D+overlap:0/278  stream A (latency):0/186  MIN9 short=GPU:0/231  MIN9 short=CPU:0/231
+ 12.2s GPU only:0/665  CPU only:0/391  A live:0/333  C balance any:3/291  D snap .5:0/306  B quiet-balance:0/338  A+overlap:0/368  D+overlap:0/352  stream A (latency):0/261  MIN9 short=GPU:0/333  MIN9 short=CPU:0/333
+ 13.9s GPU only:0/753  CPU only:0/453  A live:2/358  C balance any:3/349  D snap .5:3/336  B quiet-balance:2/367  A+overlap:0/389  D+overlap:0/389  stream A (latency):2/288  MIN9 short=GPU:2/358  MIN9 short=CPU:2/358
+ 14.5s GPU only:0/807  CPU only:0/472  A live:0/347  C balance any:3/377  D snap .5:0/334  B quiet-balance:0/333  A+overlap:0/382  D+overlap:0/390  stream A (latency):0/272  MIN9 short=GPU:0/347  MIN9 short=CPU:0/347
+ 11.5s GPU only:2/602  CPU only:2/396  A live:0/269  C balance any:2/276  D snap .5:2/273  B quiet-balance:2/250  A+overlap:0/346  D+overlap:2/344  stream A (latency):0/208  MIN9 short=GPU:0/269  MIN9 short=CPU:0/269
+ 11.1s GPU only:0/604  CPU only:0/348  A live:0/266  C balance any:0/271  D snap .5:0/285  B quiet-balance:0/273  A+overlap:0/305  D+overlap:2/312  stream A (latency):0/219  MIN9 short=GPU:0/266  MIN9 short=CPU:0/266
+ 10.3s GPU only:2/551  CPU only:2/321  A live:2/247  C balance any:2/256  D snap .5:2/268  B quiet-balance:2/263  A+overlap:2/305  D+overlap:4/299  stream A (latency):2/193  MIN9 short=GPU:2/247  MIN9 short=CPU:2/247
+ 12.1s GPU only:2/655  CPU only:2/383  A live:2/293  C balance any:2/284  D snap .5:2/301  B quiet-balance:2/263  A+overlap:2/342  D+overlap:2/314  stream A (latency):2/218  MIN9 short=GPU:2/293  MIN9 short=CPU:2/293
+ 10.8s GPU only:2/560  CPU only:2/342  A live:2/409  C balance any:4/291  D snap .5:2/272  B quiet-balance:2/307  A+overlap:2/455  D+overlap:2/302  stream A (latency):2/107  MIN9 short=GPU:2/409  MIN9 short=CPU:2/409
+ 12.8s GPU only:0/756  CPU only:0/412  A live:0/285  C balance any:0/298  D snap .5:0/300  B quiet-balance:0/284  A+overlap:0/362  D+overlap:0/352  stream A (latency):0/241  MIN9 short=GPU:0/285  MIN9 short=CPU:0/285
+ 11.3s GPU only:0/606  CPU only:0/356  A live:0/293  C balance any:1/275  D snap .5:0/302  B quiet-balance:0/291  A+overlap:0/345  D+overlap:0/322  stream A (latency):0/229  MIN9 short=GPU:0/293  MIN9 short=CPU:0/293
+ 10.7s GPU only:6/558  CPU only:6/342  A live:3/250  C balance any:6/250  D snap .5:3/258  B quiet-balance:6/258  A+overlap:11/280  D+overlap:11/284  stream A (latency):3/207  MIN9 short=GPU:3/250  MIN9 short=CPU:3/250
+ 10.9s GPU only:6/593  CPU only:6/350  A live:6/268  C balance any:6/278  D snap .5:3/308  B quiet-balance:6/263  A+overlap:6/284  D+overlap:6/300  stream A (latency):6/201  MIN9 short=GPU:6/268  MIN9 short=CPU:6/268
+ 11.2s GPU only:10/604  CPU only:10/352  A live:13/249  C balance any:10/278  D snap .5:13/258  B quiet-balance:11/252  A+overlap:8/327  D+overlap:10/332  stream A (latency):13/205  MIN9 short=GPU:13/249  MIN9 short=CPU:13/249
+ 13.5s GPU only:4/777  CPU only:4/441  A live:4/300  C balance any:4/283  D snap .5:4/354  B quiet-balance:4/309  A+overlap:4/337  D+overlap:4/386  stream A (latency):4/251  MIN9 short=GPU:4/300  MIN9 short=CPU:4/300
+ 11.6s GPU only:7/635  CPU only:4/375  A live:4/272  C balance any:4/261  D snap .5:4/295  B quiet-balance:4/275  A+overlap:4/351  D+overlap:4/311  stream A (latency):4/211  MIN9 short=GPU:4/272  MIN9 short=CPU:4/272
+ 12.8s GPU only:0/743  CPU only:0/414  A live:0/296  C balance any:0/310  D snap .5:0/326  B quiet-balance:0/275  A+overlap:0/351  D+overlap:0/352  stream A (latency):0/229  MIN9 short=GPU:0/296  MIN9 short=CPU:0/296
+
+WER (errors / 2385 words) and mean ms (stream row = latency after speech ends):
+GPU only               errors  161  WER  6.75%  mean   531 ms
+CPU only               errors  157  WER  6.58%  mean   312 ms
+A live                 errors  198  WER  8.30%  mean   265 ms
+C balance any          errors  236  WER  9.90%  mean   257 ms
+D snap .5              errors  199  WER  8.34%  mean   256 ms
+B quiet-balance        errors  194  WER  8.13%  mean   259 ms
+A+overlap              errors  198  WER  8.30%  mean   301 ms
+D+overlap              errors  200  WER  8.39%  mean   295 ms
+stream A (latency)     errors  198  WER  8.30%  mean   191 ms
+MIN9 short=GPU         errors  177  WER  7.42%  mean   333 ms
+MIN9 short=CPU         errors  174  WER  7.30%  mean   261 ms
+-- clips 4.5-9 s:
+   GPU only               n=43 WER  6.66%  mean  358 ms
+   CPU only               n=43 WER  6.27%  mean  202 ms
+   A live                 n=43 WER  9.35%  mean  210 ms
+   C balance any          n=43 WER 10.88%  mean  197 ms
+   D snap .5              n=43 WER  9.22%  mean  193 ms
+   B quiet-balance        n=43 WER  9.35%  mean  205 ms
+   A+overlap              n=43 WER  8.32%  mean  243 ms
+   D+overlap              n=43 WER  8.71%  mean  235 ms
+   stream A (latency)     n=43 WER  9.35%  mean  138 ms
+   MIN9 short=GPU         n=43 WER  6.66%  mean  358 ms
+   MIN9 short=CPU         n=43 WER  6.27%  mean  202 ms
+-- clips 9-19 s:
+   GPU only               n=51 WER  6.80%  mean  676 ms
+   CPU only               n=51 WER  6.73%  mean  405 ms
+   A live                 n=51 WER  7.79%  mean  311 ms
+   C balance any          n=51 WER  9.41%  mean  308 ms
+   D snap .5              n=51 WER  7.92%  mean  310 ms
+   B quiet-balance        n=51 WER  7.54%  mean  303 ms
+   A+overlap              n=51 WER  8.29%  mean  350 ms
+   D+overlap              n=51 WER  8.23%  mean  345 ms
+   stream A (latency)     n=51 WER  7.79%  mean  235 ms
+   MIN9 short=GPU         n=51 WER  7.79%  mean  311 ms
+   MIN9 short=CPU         n=51 WER  7.79%  mean  311 ms

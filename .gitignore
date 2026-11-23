@@ -17,3 +17,10 @@ __pycache__/
 # Local recordings (may contain voice)
 *.wav
 !samples/jfk.wav
+
+# benchmark inputs/outputs that must stay local (recordings, labels, generated audio)
+bench/truth.tsv
+bench/engine-text.tsv
+bench/testset/clips16/
+bench/testset/tts24/
+bench/__pycache__/

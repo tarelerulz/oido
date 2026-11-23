@@ -1,0 +1,116 @@
+items 94
+GPU curve [(1.0, 127), (2.5, 145), (4.0, 232), (5.5, 309), (7.0, 373), (8.5, 447), (10.0, 479), (11.5, 601), (13.0, 748), (14.5, 802), (16.0, 971), (17.5, 1009)]
+CPU curve [(1.0, 45), (2.5, 68), (4.0, 112), (5.5, 218), (7.0, 204), (8.5, 255), (10.0, 309), (11.5, 440), (13.0, 421), (14.5, 469), (16.0, 530), (17.5, 608)]
+  5.1s  18w GPU only:0err/239ms  CPU only:0err/149ms  A live:0err/168ms  C balance any:2err/177ms  D snap .5:2err/149ms
+  4.6s  12w GPU only:5err/243ms  CPU only:5err/131ms  A live:5err/243ms  C balance any:6err/174ms  D snap .5:5err/163ms
+  5.7s  12w GPU only:2err/312ms  CPU only:2err/169ms  A live:4err/174ms  C balance any:2err/189ms  D snap .5:3err/167ms
+  6.4s  14w GPU only:2err/368ms  CPU only:2err/186ms  A live:3err/183ms  C balance any:3err/199ms  D snap .5:3err/183ms
+  4.7s  12w GPU only:0err/245ms  CPU only:0err/132ms  A live:0err/146ms  C balance any:0err/159ms  D snap .5:0err/140ms
+  5.0s  15w GPU only:2err/245ms  CPU only:0err/146ms  A live:2err/175ms  C balance any:0err/161ms  D snap .5:2err/161ms
+  4.6s  12w GPU only:0err/252ms  CPU only:0err/133ms  A live:0err/174ms  C balance any:1err/150ms  D snap .5:0err/157ms
+  6.7s  18w GPU only:0err/388ms  CPU only:0err/199ms  A live:0err/211ms  C balance any:1err/183ms  D snap .5:0err/165ms
+  5.6s  13w GPU only:0err/311ms  CPU only:0err/176ms  A live:0err/154ms  C balance any:3err/188ms  D snap .5:2err/190ms
+  5.2s  12w GPU only:0err/329ms  CPU only:0err/148ms  A live:0err/178ms  C balance any:0err/167ms  D snap .5:0err/166ms
+  4.5s  15w GPU only:3err/231ms  CPU only:3err/129ms  A live:3err/231ms  C balance any:3err/167ms  D snap .5:3err/142ms
+  6.3s  17w GPU only:0err/338ms  CPU only:0err/183ms  A live:0err/254ms  C balance any:0err/202ms  D snap .5:0err/177ms
+  6.1s  18w GPU only:0err/336ms  CPU only:0err/180ms  A live:0err/228ms  C balance any:1err/176ms  D snap .5:0err/189ms
+  4.6s  13w GPU only:0err/234ms  CPU only:0err/132ms  A live:0err/153ms  C balance any:1err/146ms  D snap .5:0err/140ms
+  5.0s  16w GPU only:0err/247ms  CPU only:0err/144ms  A live:0err/247ms  C balance any:0err/169ms  D snap .5:0err/140ms
+  4.5s  15w GPU only:0err/241ms  CPU only:0err/130ms  A live:0err/175ms  C balance any:2err/168ms  D snap .5:0err/172ms
+  5.1s  17w GPU only:0err/254ms  CPU only:0err/146ms  A live:0err/254ms  C balance any:3err/165ms  D snap .5:0err/160ms
+  8.8s  26w GPU only:2err/455ms  CPU only:2err/265ms  A live:4err/238ms  C balance any:2err/234ms  D snap .5:2err/229ms
+ 10.0s  30w GPU only:3err/473ms  CPU only:3err/307ms  A live:3err/266ms  C balance any:8err/288ms  D snap .5:5err/268ms
+ 10.6s  24w GPU only:5err/562ms  CPU only:7err/348ms  A live:10err/268ms  C balance any:5err/261ms  D snap .5:9err/253ms
+ 12.5s  26w GPU only:4err/681ms  CPU only:4err/394ms  A live:4err/293ms  C balance any:4err/305ms  D snap .5:4err/288ms
+ 11.5s  26w GPU only:0err/605ms  CPU only:0err/364ms  A live:2err/281ms  C balance any:2err/274ms  D snap .5:2err/289ms
+  8.4s  21w GPU only:2err/447ms  CPU only:2err/254ms  A live:2err/227ms  C balance any:2err/233ms  D snap .5:2err/227ms
+  6.6s  18w GPU only:4err/366ms  CPU only:5err/194ms  A live:5err/212ms  C balance any:9err/191ms  D snap .5:7err/165ms
+  8.3s  24w GPU only:3err/449ms  CPU only:3err/251ms  A live:7err/243ms  C balance any:5err/230ms  D snap .5:5err/215ms
+ 10.0s  27w GPU only:0err/464ms  CPU only:0err/318ms  A live:2err/256ms  C balance any:0err/254ms  D snap .5:2err/272ms
+  8.2s  20w GPU only:0err/441ms  CPU only:0err/242ms  A live:0err/240ms  C balance any:1err/221ms  D snap .5:0err/268ms
+ 10.3s  26w GPU only:0err/550ms  CPU only:0err/321ms  A live:0err/245ms  C balance any:0err/265ms  D snap .5:0err/286ms
+ 10.2s  24w GPU only:0err/546ms  CPU only:0err/317ms  A live:0err/271ms  C balance any:0err/260ms  D snap .5:0err/240ms
+  9.1s  19w GPU only:0err/450ms  CPU only:0err/275ms  A live:0err/237ms  C balance any:0err/247ms  D snap .5:2err/244ms
+  9.6s  21w GPU only:0err/455ms  CPU only:0err/290ms  A live:0err/242ms  C balance any:1err/247ms  D snap .5:0err/251ms
+  7.1s  14w GPU only:0err/387ms  CPU only:0err/210ms  A live:0err/232ms  C balance any:0err/187ms  D snap .5:0err/194ms
+  7.9s  18w GPU only:0err/432ms  CPU only:0err/261ms  A live:0err/209ms  C balance any:0err/201ms  D snap .5:0err/214ms
+  7.4s  18w GPU only:0err/387ms  CPU only:0err/254ms  A live:0err/254ms  C balance any:0err/194ms  D snap .5:2err/211ms
+  8.2s  18w GPU only:0err/439ms  CPU only:0err/247ms  A live:2err/215ms  C balance any:0err/302ms  D snap .5:2err/227ms
+ 10.1s  27w GPU only:3err/473ms  CPU only:3err/308ms  A live:3err/258ms  C balance any:3err/249ms  D snap .5:3err/239ms
+ 11.2s  32w GPU only:3err/601ms  CPU only:3err/361ms  A live:3err/260ms  C balance any:5err/269ms  D snap .5:3err/267ms
+ 10.1s  24w GPU only:0err/477ms  CPU only:0err/317ms  A live:0err/267ms  C balance any:0err/261ms  D snap .5:0err/251ms
+  6.6s  16w GPU only:0err/367ms  CPU only:0err/196ms  A live:0err/186ms  C balance any:0err/166ms  D snap .5:0err/164ms
+  5.7s  17w GPU only:0err/312ms  CPU only:0err/170ms  A live:2err/161ms  C balance any:0err/186ms  D snap .5:0err/173ms
+  9.0s  26w GPU only:0err/445ms  CPU only:0err/271ms  A live:0err/256ms  C balance any:0err/234ms  D snap .5:0err/245ms
+ 11.1s  31w GPU only:0err/596ms  CPU only:0err/357ms  A live:0err/291ms  C balance any:0err/278ms  D snap .5:0err/288ms
+  8.0s  22w GPU only:0err/438ms  CPU only:0err/240ms  A live:0err/248ms  C balance any:1err/210ms  D snap .5:0err/222ms
+  6.6s  18w GPU only:0err/368ms  CPU only:0err/197ms  A live:2err/181ms  C balance any:2err/196ms  D snap .5:2err/164ms
+  7.7s  24w GPU only:0err/427ms  CPU only:0err/243ms  A live:2err/209ms  C balance any:2err/187ms  D snap .5:0err/205ms
+  6.7s  21w GPU only:2err/364ms  CPU only:0err/198ms  A live:2err/185ms  C balance any:2err/184ms  D snap .5:2err/167ms
+  7.6s  22w GPU only:2err/377ms  CPU only:2err/225ms  A live:2err/217ms  C balance any:2err/194ms  D snap .5:2err/205ms
+  8.2s  25w GPU only:0err/448ms  CPU only:0err/247ms  A live:0err/258ms  C balance any:0err/238ms  D snap .5:0err/254ms
+  7.4s  19w GPU only:0err/370ms  CPU only:0err/220ms  A live:0err/198ms  C balance any:0err/179ms  D snap .5:0err/179ms
+  8.1s  19w GPU only:0err/437ms  CPU only:0err/241ms  A live:0err/262ms  C balance any:0err/256ms  D snap .5:0err/253ms
+  6.2s  15w GPU only:6err/341ms  CPU only:6err/203ms  A live:8err/175ms  C balance any:6err/179ms  D snap .5:6err/181ms
+  7.0s  16w GPU only:6err/372ms  CPU only:6err/207ms  A live:6err/177ms  C balance any:6err/196ms  D snap .5:6err/200ms
+  8.6s  23w GPU only:4err/460ms  CPU only:4err/339ms  A live:2err/260ms  C balance any:4err/241ms  D snap .5:4err/240ms
+  8.7s  28w GPU only:4err/451ms  CPU only:4err/268ms  A live:4err/237ms  C balance any:7err/237ms  D snap .5:4err/233ms
+  7.3s  21w GPU only:3err/382ms  CPU only:3err/214ms  A live:3err/208ms  C balance any:6err/244ms  D snap .5:3err/297ms
+  7.9s  23w GPU only:0err/430ms  CPU only:0err/236ms  A live:3err/195ms  C balance any:0err/207ms  D snap .5:3err/209ms
+ 13.8s  38w GPU only:5err/772ms  CPU only:7err/490ms  A live:5err/432ms  C balance any:5err/349ms  D snap .5:5err/327ms
+ 16.1s  42w GPU only:5err/958ms  CPU only:5err/536ms  A live:7err/401ms  C balance any:9err/379ms  D snap .5:7err/391ms
+ 17.4s  38w GPU only:9err/1004ms  CPU only:9err/600ms  A live:11err/419ms  C balance any:9err/522ms  D snap .5:13err/490ms
+ 17.6s  38w GPU only:4err/1004ms  CPU only:4err/630ms  A live:4err/447ms  C balance any:4err/436ms  D snap .5:2err/428ms
+ 15.2s  35w GPU only:4err/804ms  CPU only:4err/504ms  A live:4err/360ms  C balance any:4err/369ms  D snap .5:4err/362ms
+ 11.7s  30w GPU only:7err/648ms  CPU only:7err/368ms  A live:7err/262ms  C balance any:8err/283ms  D snap .5:5err/267ms
+ 12.0s  33w GPU only:4err/655ms  CPU only:2err/380ms  A live:5err/289ms  C balance any:6err/301ms  D snap .5:5err/306ms
+ 13.3s  36w GPU only:3err/739ms  CPU only:3err/438ms  A live:6err/350ms  C balance any:9err/314ms  D snap .5:3err/340ms
+ 13.6s  35w GPU only:0err/771ms  CPU only:0err/452ms  A live:2err/355ms  C balance any:2err/325ms  D snap .5:2err/323ms
+ 15.3s  38w GPU only:0err/764ms  CPU only:0err/515ms  A live:0err/402ms  C balance any:0err/376ms  D snap .5:0err/380ms
+ 13.9s  32w GPU only:0err/782ms  CPU only:0err/473ms  A live:0err/386ms  C balance any:2err/350ms  D snap .5:2err/337ms
+ 16.2s  37w GPU only:0err/969ms  CPU only:0err/549ms  A live:0err/386ms  C balance any:2err/399ms  D snap .5:0err/408ms
+ 13.1s  27w GPU only:0err/756ms  CPU only:0err/428ms  A live:0err/338ms  C balance any:0err/307ms  D snap .5:2err/303ms
+ 13.1s  27w GPU only:0err/744ms  CPU only:0err/428ms  A live:0err/374ms  C balance any:3err/328ms  D snap .5:0err/334ms
+ 11.9s  26w GPU only:0err/643ms  CPU only:0err/375ms  A live:0err/276ms  C balance any:0err/311ms  D snap .5:0err/318ms
+ 10.9s  24w GPU only:0err/590ms  CPU only:0err/360ms  A live:0err/276ms  C balance any:0err/272ms  D snap .5:0err/281ms
+ 13.0s  30w GPU only:0err/744ms  CPU only:0err/414ms  A live:0err/295ms  C balance any:0err/301ms  D snap .5:0err/314ms
+ 13.1s  33w GPU only:3err/753ms  CPU only:3err/435ms  A live:3err/303ms  C balance any:3err/354ms  D snap .5:3err/316ms
+ 16.8s  44w GPU only:3err/1000ms  CPU only:3err/559ms  A live:3err/405ms  C balance any:3err/418ms  D snap .5:3err/420ms
+ 15.0s  39w GPU only:3err/791ms  CPU only:3err/552ms  A live:3err/367ms  C balance any:3err/373ms  D snap .5:3err/395ms
+ 13.3s  33w GPU only:0err/737ms  CPU only:0err/460ms  A live:0err/333ms  C balance any:1err/303ms  D snap .5:0err/301ms
+  9.5s  24w GPU only:0err/462ms  CPU only:0err/290ms  A live:0err/231ms  C balance any:0err/257ms  D snap .5:0err/243ms
+ 12.2s  35w GPU only:0err/665ms  CPU only:0err/391ms  A live:0err/333ms  C balance any:3err/291ms  D snap .5:0err/306ms
+ 13.9s  39w GPU only:0err/753ms  CPU only:0err/453ms  A live:2err/358ms  C balance any:3err/349ms  D snap .5:3err/336ms
+ 14.5s  40w GPU only:0err/807ms  CPU only:0err/472ms  A live:0err/347ms  C balance any:3err/377ms  D snap .5:0err/334ms
+ 11.5s  31w GPU only:2err/602ms  CPU only:2err/396ms  A live:0err/269ms  C balance any:2err/276ms  D snap .5:2err/273ms
+ 11.1s  33w GPU only:0err/604ms  CPU only:0err/348ms  A live:0err/266ms  C balance any:0err/271ms  D snap .5:0err/285ms
+ 10.3s  30w GPU only:2err/551ms  CPU only:2err/321ms  A live:2err/247ms  C balance any:2err/256ms  D snap .5:2err/268ms
+ 12.1s  37w GPU only:2err/655ms  CPU only:2err/383ms  A live:2err/293ms  C balance any:2err/284ms  D snap .5:2err/301ms
+ 10.8s  31w GPU only:2err/560ms  CPU only:2err/342ms  A live:2err/409ms  C balance any:4err/291ms  D snap .5:2err/272ms
+ 12.8s  35w GPU only:0err/756ms  CPU only:0err/412ms  A live:0err/285ms  C balance any:0err/298ms  D snap .5:0err/300ms
+ 11.3s  28w GPU only:0err/606ms  CPU only:0err/356ms  A live:0err/293ms  C balance any:1err/275ms  D snap .5:0err/302ms
+ 10.7s  25w GPU only:6err/558ms  CPU only:6err/342ms  A live:3err/250ms  C balance any:6err/250ms  D snap .5:3err/258ms
+ 10.9s  25w GPU only:6err/593ms  CPU only:6err/350ms  A live:6err/268ms  C balance any:6err/278ms  D snap .5:3err/308ms
+ 11.2s  29w GPU only:10err/604ms  CPU only:10err/352ms  A live:13err/249ms  C balance any:10err/278ms  D snap .5:13err/258ms
+ 13.5s  38w GPU only:4err/777ms  CPU only:4err/441ms  A live:4err/300ms  C balance any:4err/283ms  D snap .5:4err/354ms
+ 11.6s  34w GPU only:7err/635ms  CPU only:4err/375ms  A live:4err/272ms  C balance any:4err/261ms  D snap .5:4err/295ms
+ 12.8s  38w GPU only:0err/743ms  CPU only:0err/414ms  A live:0err/296ms  C balance any:0err/310ms  D snap .5:0err/326ms
+
+WER (word errors / 2385 reference words) and mean ms:
+GPU only       errors  161  WER  6.75%  mean   531 ms
+CPU only       errors  157  WER  6.58%  mean   312 ms
+A live         errors  198  WER  8.30%  mean   265 ms
+C balance any  errors  236  WER  9.90%  mean   257 ms
+D snap .5      errors  199  WER  8.34%  mean   256 ms
+-- clips 4.5-9 s:
+   GPU only       n=43 WER  6.66%  mean  358 ms
+   CPU only       n=43 WER  6.27%  mean  202 ms
+   A live         n=43 WER  9.35%  mean  210 ms
+   C balance any  n=43 WER 10.88%  mean  197 ms
+   D snap .5      n=43 WER  9.22%  mean  193 ms
+-- clips 9-19 s:
+   GPU only       n=51 WER  6.80%  mean  676 ms
+   CPU only       n=51 WER  6.73%  mean  405 ms
+   A live         n=51 WER  7.79%  mean  311 ms
+   C balance any  n=51 WER  9.41%  mean  308 ms
+   D snap .5      n=51 WER  7.92%  mean  310 ms
