@@ -256,9 +256,12 @@ cd host && make tasr_cli_a72
 printf '../samples/jfk.wav\n' | taskset -c 1,2,3 nice -n 19 ./tasr_cli_a72 nemo8.tnm --serve
 ```
 
-The `--serve` mode was missing from this repo until the pull request that added this page. The settings mentioned above (`OIDO_SILENCE_MS`, `OIDO_KWS_EARLY`, `OIDO_HYBRID_RULE`)
-are in `oido-type.py` in the [oido-streaming](https://github.com/tarelerulz/oido-streaming) repo. The benchmark scripts (speed against clip length,
-cut rules, the four ideas, the replays), the test set and the scoring code are not in this repo yet; they are planned for a follow-up pull request.
+The `--serve` mode was added to this repo together with this page. The settings mentioned above (`OIDO_SILENCE_MS`, `OIDO_KWS_EARLY`, `OIDO_HYBRID_RULE`)
+are in `oido-type.py` in the [oido-streaming](https://github.com/tarelerulz/oido-streaming) repo.
+
+The benchmark scripts are in [`bench/`](bench/README.md): speed against clip length, the cut rules, the four ideas, the end-to-end replay, the quiet-rule test and the speed lab, plus
+the everyday test set (sentences and a script that builds the audio) and the output of the everyday-set runs in `bench/results/`. The recordings and the hand-written labels behind the
+real-phrase numbers are one person's voice and are not published: the scripts take your own recordings (`CLIPS_DIR`) and labels (`label_clips.py` makes them). The stop-word check timing is not included.
 
 ---
 
