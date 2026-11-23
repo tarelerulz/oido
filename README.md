@@ -40,7 +40,7 @@ Model weights are from Lokutor's Hugging Face pages:
 - `phone/transcribe.py`: batch transcription of 16 kHz WAV files.
 - `phone/transcribe_apollo.sh`: long-file test script.
 - `port/gpu/`: GPU (Vulkan, Pi 400) work; the story and the code are in [gpu-port-kit](https://github.com/tarelerulz/gpu-port-kit) ([OIDO_GPU_STORY.md](https://github.com/tarelerulz/gpu-port-kit/blob/main/OIDO_GPU_STORY.md)).
-- `BENCHMARKS.md`: timing method, Pi and phone results, and comparison with upstream v2.
+- `BENCHMARKS.md`: current CPU / GPU / hybrid speed and word-error results, heart and heart-nano timings, rejected ideas and limits; older comparison with upstream v2 at the bottom.
 - `docs/phone-benchmarks.md`: measured numbers and the changes behind them (Part 2, sanoTTS heart, is not part of this engine).
 
 ## Model files (not included)

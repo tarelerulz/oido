@@ -75,7 +75,10 @@ int main(int argc, char **argv)
         else if (!strcmp(argv[i], "--beam") && i + 1 < argc) { beam = atoi(argv[++i]); first = i + 1; }
         else if (!strcmp(argv[i], "--lm_weight") && i + 1 < argc) { lw = (float)atof(argv[++i]); first = i + 1; }
         else if (!strcmp(argv[i], "--token_bonus") && i + 1 < argc) { tb = (float)atof(argv[++i]); first = i + 1; }
+        else if (!strcmp(argv[i], "--serve")) { first = i + 1; }
     }
+    int serve = 0;
+    for (int i = 2; i < argc; i++) if (!strcmp(argv[i], "--serve")) serve = 1;
     size_t msz;
     uint8_t *mb = read_file(argv[1], &msz);
     if (!mb) { fprintf(stderr, "cannot read model %s\n", argv[1]); return 1; }
@@ -101,6 +104,31 @@ int main(int argc, char **argv)
         if (lm) tasr_stream_set_decoder(s, tasr_decoder_create(lm, 257, beam, 6, lw < 0 ? 0.5f : lw, tb < 0 ? 2.0f : tb));
     }
     static char text[16384];
+    if (serve) {  // keep-loaded mode: one WAV path per stdin line -> "path\ttext" per stdout line
+        char line[4096];
+        while (fgets(line, sizeof(line), stdin)) {
+            size_t L = strlen(line);
+            while (L && (line[L - 1] == '\n' || line[L - 1] == '\r')) line[--L] = 0;
+            if (!L) { printf("\t\n"); fflush(stdout); continue; }
+            int ns = 0;
+            int16_t *pcm = read_wav(line, &ns);
+            text[0] = 0;
+            if (pcm) {
+                if (nemo) {
+                    tasr_nemo_transcribe(nm, pcm, ns, dec, text, sizeof(text), NULL, 0, NULL);
+                } else {
+                    tasr_stream_reset(s);
+                    for (int j = 0; j < ns; j += 320) tasr_stream_feed(s, pcm + j, ns - j < 320 ? ns - j : 320);
+                    tasr_stream_finish(s);
+                    snprintf(text, sizeof(text), "%s", tasr_stream_text(s));
+                }
+                free(pcm);
+            }
+            printf("%s\t%s\n", line, text);
+            fflush(stdout);
+        }
+        return 0;
+    }
     for (int i = first; i < argc; i++) {
         int ns = 0;
         int16_t *pcm = read_wav(argv[i], &ns);
