@@ -152,7 +152,7 @@ sentence was listened to (it sounded the same as the base); the others were not.
 - **Pi 400 only for the oido numbers**; the Pi 5 and phone are untested or earlier-only.
 - **Simulated, not built:** the streaming-head latency.
 - **No language model** in the word-error runs; with it the errors would be lower.
-- Clock and governor: performance governor, GPU clock as configured on the test machine (700 MHz in the setup notes; not read back during these runs).
+- Clock and governor: performance governor; the GPU (V3D) clock was read back as 800 MHz (`v3d_freq=800`, `over_voltage=6` in the boot config) after these runs. The CPU was not overclocked.
 
 ## Reproduce
 
