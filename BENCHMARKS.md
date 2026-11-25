@@ -338,3 +338,15 @@ Time each run with `date +%s%N` before and after the command. Use 10 runs per mo
 ### Raw data
 
 The raw per-run timings and the scripts used are kept with the author's private test notes, not in this repo.
+
+## CPU engine speedup, exact build (2026-11-24)
+
+Patch from the Antigravity agent, re-checked independently. Output is unchanged: logits are bit-identical to the old build (FNV-64 hashes, Pi 400 on 6 files, Pixel 9 VM on 3 files at 1, 3 and 4 cores), and word errors on 40 everyday sentences (447 words) are identical (LM 27, greedy 21).
+Changes: 4-query blocked attention, interleaved sigmoid table, batched front end, fused layer-norm + quantise, parallel CTC head and LM, lock-free thread pool.
+
+| Machine | Test | Before | After |
+|---|---|---:|---:|
+| Pi 400, 3 threads, LM | 10 s clip | 320 ms | 294 ms |
+| Pixel 9 VM, 3 cores, LM | 10 s clip | 59 ms | 56 ms |
+
+The agent's own report claimed larger gains (11% on Pi 400); independent re-measurement gives about 8% on Pi 400 and about 5% on the phone. The optional `-DTASR_FASTMATH` variant is not included here (not bit-exact, gain not reproduced).

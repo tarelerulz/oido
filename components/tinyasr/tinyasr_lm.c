@@ -1,5 +1,8 @@
 // On-device CTC prefix beam search with GRU language-model shallow fusion (mirrors train/beam.py).
 // LM weights: int8 per-row (tasr_qlin row layout), activations dynamically quantized per step.
+#if defined(__aarch64__) && !defined(TASR_NO_SIMD)
+#include <arm_neon.h>
+#endif
 #include <math.h>
 #include <string.h>
 #include "kernels.h"
@@ -80,6 +83,38 @@ size_t tasr_lm_to_ram(tasr_lm_t *lm)
 }
 
 static inline float fsig(float x) { return 1.0f / (1.0f + expf(-x)); }
+#if defined(TASR_FASTMATH) && defined(__aarch64__) && !defined(TASR_NO_SIMD)
+static inline float32x4_t lm_exp_v4(float32x4_t x)
+{
+    const float32x4_t lo = vdupq_n_f32(-87.0f), hi = vdupq_n_f32(87.0f);
+    uint32x4_t under = vcltq_f32(x, lo);
+    float32x4_t xc = vminq_f32(vmaxq_f32(x, lo), hi);
+    float32x4_t t = vmulq_f32(xc, vdupq_n_f32(1.4426950408889634f));
+    float32x4_t tf = vrndmq_f32(t);
+    float32x4_t f = vsubq_f32(t, tf);
+    int32x4_t ki = vcvtq_s32_f32(tf);
+    float32x4_t p = vdupq_n_f32(1.3534167e-2f);
+    p = vaddq_f32(vmulq_f32(p, f), vdupq_n_f32(5.2011464e-2f));
+    p = vaddq_f32(vmulq_f32(p, f), vdupq_n_f32(2.4144275e-1f));
+    p = vaddq_f32(vmulq_f32(p, f), vdupq_n_f32(6.9300383e-1f));
+    p = vaddq_f32(vmulq_f32(p, f), vdupq_n_f32(1.0f));
+    float32x4_t pow2k = vreinterpretq_f32_s32(vshlq_n_s32(vaddq_s32(ki, vdupq_n_s32(127)), 23));
+    return vbslq_f32(under, vdupq_n_f32(0.f), vmulq_f32(p, pow2k));
+}
+static inline float32x4_t lm_sig_v4(float32x4_t x)
+{
+    float32x4_t d = vaddq_f32(vdupq_n_f32(1.f), lm_exp_v4(vnegq_f32(x)));
+    float32x4_t r = vrecpeq_f32(d);
+    r = vmulq_f32(r, vrecpsq_f32(d, r));
+    r = vmulq_f32(r, vrecpsq_f32(d, r));
+    return r;
+}
+static inline float32x4_t lm_tanh_v4(float32x4_t x)
+{
+    // tanh(x) = 2 * sigmoid(2x) - 1
+    return vsubq_f32(vmulq_f32(vdupq_n_f32(2.f), lm_sig_v4(vmulq_f32(vdupq_n_f32(2.f), x))), vdupq_n_f32(1.f));
+}
+#endif
 
 // ---------------------------------------------------------------- decoder
 #define MAXB 16
@@ -113,15 +148,99 @@ struct tasr_decoder {
     int *hash;
     int hash_cap;
     float *st_h, *st_lp;  // LM state pool: [slots][H], [slots][V]
+    float *bos_h, *bos_lp;  // cached BOS state (computed once in tasr_decoder_create)
     int16_t *free_slots;
     int n_free, max_slots;
     beam_t beams[MAXB];
     int n_beams;
     int8_t *xq;
-    float *xs, *gi, *gh, *tmp;
+    float *xs, *gi, *gh, *tmp, *exbuf;
     int8_t *wtmp[TASR_NW];
     int32_t *acc[TASR_NW];
 };
+
+typedef struct {
+    tasr_decoder_t *d;
+    const int *out;
+    int n, H, ldt;
+} lmgru_t;
+static void lm_gru_job(void *c, int b, int e, int w)
+{
+    (void)w;
+    lmgru_t *g = (lmgru_t *)c;
+    const int H = g->H, ldt = g->ldt;
+#if defined(TASR_FASTMATH) && defined(__aarch64__) && !defined(TASR_NO_SIMD)
+    const float32x4_t v1 = vdupq_n_f32(1.f);
+    int idx = b;
+    while (idx < e) {
+        const int i = idx / H;
+        int j = idx - i * H;
+        int end_j = e - i * H;
+        if (end_j > H) end_j = H;
+        const float *gi = g->d->gi + (size_t)i * 3 * H, *gh = g->d->gh + (size_t)i * 3 * H;
+        const float *hp = g->d->tmp + (size_t)i * ldt;
+        float *h = g->d->st_h + (size_t)g->out[i] * H;
+        for (; j + 4 <= end_j; j += 4) {
+            float32x4_t r = lm_sig_v4(vaddq_f32(vld1q_f32(gi + j), vld1q_f32(gh + j)));
+            float32x4_t z = lm_sig_v4(vaddq_f32(vld1q_f32(gi + H + j), vld1q_f32(gh + H + j)));
+            float32x4_t nn = lm_tanh_v4(vaddq_f32(vld1q_f32(gi + 2 * H + j), vmulq_f32(r, vld1q_f32(gh + 2 * H + j))));
+            vst1q_f32(h + j, vaddq_f32(vmulq_f32(vsubq_f32(v1, z), nn), vmulq_f32(z, vld1q_f32(hp + j))));
+        }
+        for (; j < end_j; j++) {
+            float r = fsig(gi[j] + gh[j]);
+            float z = fsig(gi[H + j] + gh[H + j]);
+            float nn = tanhf(gi[2 * H + j] + r * gh[2 * H + j]);
+            h[j] = (1.f - z) * nn + z * hp[j];
+        }
+        idx = i * H + end_j;
+    }
+#else
+    for (int idx = b; idx < e; idx++) {
+        const int i = idx / H, j = idx - i * H;
+        const float *gi = g->d->gi + (size_t)i * 3 * H, *gh = g->d->gh + (size_t)i * 3 * H;
+        const float *hp = g->d->tmp + (size_t)i * ldt;
+        float *h = g->d->st_h + (size_t)g->out[i] * H;
+        float r = fsig(gi[j] + gh[j]);
+        float z = fsig(gi[H + j] + gh[H + j]);
+        float nn = tanhf(gi[2 * H + j] + r * gh[2 * H + j]);
+        h[j] = (1.f - z) * nn + z * hp[j];
+    }
+#endif
+}
+typedef struct {
+    const float *lo;
+    float *ex;
+    const float *mxs;
+    int V;
+} lmexp_t;
+static void lm_exp_job(void *c, int b, int e, int w)
+{
+    (void)w;
+    lmexp_t *j = (lmexp_t *)c;
+    const int V = j->V;
+#if defined(TASR_FASTMATH) && defined(__aarch64__) && !defined(TASR_NO_SIMD)
+    int idx = b;
+    while (idx < e) {
+        const int i = idx / V;
+        int v = idx - i * V;
+        int end_v = e - i * V;
+        if (end_v > V) end_v = V;
+        const float mx = j->mxs[i];
+        const float32x4_t vmx = vdupq_n_f32(mx);
+        const float *lo = j->lo + (size_t)i * V;
+        float *ex = j->ex + (size_t)i * V;
+        for (; v + 4 <= end_v; v += 4)
+            vst1q_f32(ex + v, lm_exp_v4(vsubq_f32(vld1q_f32(lo + v), vmx)));
+        for (; v < end_v; v++) ex[v] = expf(lo[v] - mx);
+        idx = i * V + end_v;
+    }
+#else
+    for (int idx = b; idx < e; idx++) {
+        const int i = idx / V;
+        j->ex[idx] = expf(j->lo[idx] - j->mxs[i]);
+    }
+#endif
+}
 
 typedef struct {
     tasr_decoder_t *d;
@@ -132,13 +251,15 @@ typedef struct {
 static void lm_gemm_job(void *c, int b, int e, int w)
 {
     lmjob_t *j = (lmjob_t *)c;
+    const int u = (j->L->bits == 8 && (j->L->n & 3) == 0) ? 4 : 1;
     tasr_qlin_range(j->L, j->d->xq, j->d->xs, j->T, j->d->lm->kp_max, j->y, j->ldy, j->d->wtmp[w],
-                    j->d->acc[w], b, e);
+                    j->d->acc[w], b * u, e * u);
 }
 static void lm_qlin(tasr_decoder_t *d, const tasr_qlin_t *L, int T, float *y, int ldy)
 {
     lmjob_t j = {d, L, T, ldy, y};
-    TASR_PAR(12, lm_gemm_job, &j, L->n);  // split output rows across the workers
+    const int u = (L->bits == 8 && (L->n & 3) == 0) ? 4 : 1;
+    TASR_PAR(12, lm_gemm_job, &j, L->n / u);  // split output rows across the workers on 4-row tiles
 }
 
 static int slot_alloc(tasr_decoder_t *d) { return d->n_free > 0 ? d->free_slots[--d->n_free] : -1; }
@@ -155,12 +276,24 @@ static void lm_steps(tasr_decoder_t *d, const int *parent, const int *tok, const
     const tasr_lm_t *lm = d->lm;
     const int H = lm->H, V = lm->V, E = lm->E, ldq = lm->kp_max;
     if (n <= 0) return;
-    for (int i = 0; i < n; i++) {
-        float *x = d->tmp + (size_t)i * (E > H ? E : H);
-        const int8_t *er = lm->emb.w + (size_t)tok[i] * lm->emb.kp;
-        for (int e = 0; e < E; e++) x[e] = (float)er[e] * lm->emb.s[tok[i]];
-    }
     const int ldt = E > H ? E : H;
+    for (int i = 0; i < n; i++) {
+        float *x = d->tmp + (size_t)i * ldt;
+        const int8_t *er = lm->emb.w + (size_t)tok[i] * lm->emb.kp;
+        const float sc = lm->emb.s[tok[i]];
+#if defined(__aarch64__) && !defined(TASR_NO_SIMD)
+        const float32x4_t vsc = vdupq_n_f32(sc);
+        int e = 0;
+        for (; e + 8 <= E; e += 8) {
+            int16x8_t v16 = vmovl_s8(vld1_s8(er + e));
+            vst1q_f32(x + e,     vmulq_f32(vcvtq_f32_s32(vmovl_s16(vget_low_s16(v16))), vsc));
+            vst1q_f32(x + e + 4, vmulq_f32(vcvtq_f32_s32(vmovl_high_s16(v16)), vsc));
+        }
+        for (; e < E; e++) x[e] = (float)er[e] * sc;
+#else
+        for (int e = 0; e < E; e++) x[e] = (float)er[e] * sc;
+#endif
+    }
     tasr_quant_rows(d->tmp, n, E, ldt, d->xq, ldq, lm->w_ih.kp, d->xs);
     lm_qlin(d, &lm->w_ih, n, d->gi, 3 * H);
     for (int i = 0; i < n; i++) {  // previous hidden states (zeros for BOS)
@@ -170,29 +303,54 @@ static void lm_steps(tasr_decoder_t *d, const int *parent, const int *tok, const
     }
     tasr_quant_rows(d->tmp, n, H, ldt, d->xq, ldq, lm->w_hh.kp, d->xs);
     lm_qlin(d, &lm->w_hh, n, d->gh, 3 * H);
-    for (int i = 0; i < n; i++) {
-        const float *gi = d->gi + (size_t)i * 3 * H, *gh = d->gh + (size_t)i * 3 * H;
-        const float *hp = d->tmp + (size_t)i * ldt;
-        float *h = d->st_h + (size_t)out[i] * H;
-        for (int j = 0; j < H; j++) {
-            float r = fsig(gi[j] + gh[j]);
-            float z = fsig(gi[H + j] + gh[H + j]);
-            float nn = tanhf(gi[2 * H + j] + r * gh[2 * H + j]);
-            h[j] = (1.f - z) * nn + z * hp[j];
-        }
-        memcpy(d->tmp + (size_t)i * ldt, h, sizeof(float) * H);
+    {
+        lmgru_t gj = {d, out, n, H, ldt};
+        TASR_PAR(12, lm_gru_job, &gj, n * H);
     }
+    for (int i = 0; i < n; i++)
+        memcpy(d->tmp + (size_t)i * ldt, d->st_h + (size_t)out[i] * H, sizeof(float) * H);
     tasr_quant_rows(d->tmp, n, H, ldt, d->xq, ldq, lm->out.kp, d->xs);
     lm_qlin(d, &lm->out, n, d->gi, V);
+    float mxs[LMB];
     for (int i = 0; i < n; i++) {
         const float *lo = d->gi + (size_t)i * V;
-        float *lp = d->st_lp + (size_t)out[i] * V;
+#if defined(__aarch64__) && !defined(TASR_NO_SIMD)
+        float32x4_t vmx0 = vdupq_n_f32(-1e30f), vmx1 = vmx0;
+        int v = 0;
+        for (; v + 8 <= V; v += 8) {
+            vmx0 = vmaxq_f32(vmx0, vld1q_f32(lo + v));
+            vmx1 = vmaxq_f32(vmx1, vld1q_f32(lo + v + 4));
+        }
+        float mx = vmaxvq_f32(vmaxq_f32(vmx0, vmx1));
+        for (; v < V; v++) mx = lo[v] > mx ? lo[v] : mx;
+#else
         float mx = lo[0];
         for (int v = 1; v < V; v++) mx = lo[v] > mx ? lo[v] : mx;
+#endif
+        mxs[i] = mx;
+    }
+    {
+        lmexp_t ej = {d->gi, d->exbuf, mxs, V};
+        TASR_PAR(12, lm_exp_job, &ej, n * V);
+    }
+    for (int i = 0; i < n; i++) {
+        const float *lo = d->gi + (size_t)i * V;
+        const float *ex = d->exbuf + (size_t)i * V;
+        float *lp = d->st_lp + (size_t)out[i] * V;
         float sum = 0.f;
-        for (int v = 0; v < V; v++) sum += expf(lo[v] - mx);
-        const float lz = mx + logf(sum);
+        for (int v = 0; v < V; v++) sum += ex[v];  // exact left-to-right float sum
+        const float lz = mxs[i] + logf(sum);
+#if defined(__aarch64__) && !defined(TASR_NO_SIMD)
+        const float32x4_t vlz = vdupq_n_f32(lz);
+        int v = 0;
+        for (; v + 8 <= V; v += 8) {
+            vst1q_f32(lp + v,     vsubq_f32(vld1q_f32(lo + v),     vlz));
+            vst1q_f32(lp + v + 4, vsubq_f32(vld1q_f32(lo + v + 4), vlz));
+        }
+        for (; v < V; v++) lp[v] = lo[v] - lz;
+#else
         for (int v = 0; v < V; v++) lp[v] = lo[v] - lz;
+#endif
     }
 }
 
@@ -244,7 +402,18 @@ void tasr_decoder_reset(tasr_decoder_t *d)
     for (int i = 0; i < d->hash_cap; i++) d->hash[i] = -1;
     d->n_free = 0;
     for (int i = d->max_slots - 1; i >= 0; i--) d->free_slots[d->n_free++] = (int16_t)i;
-    if (d->lm) d->nodes[0].state = (int16_t)lm_step(d, -1, d->lm->V - 1);  // BOS = last LM token
+    if (d->lm) {
+        if (d->bos_h && d->bos_lp) {
+            int slot = slot_alloc(d);
+            if (slot >= 0) {
+                memcpy(d->st_h + (size_t)slot * d->lm->H, d->bos_h, sizeof(float) * d->lm->H);
+                memcpy(d->st_lp + (size_t)slot * d->lm->V, d->bos_lp, sizeof(float) * d->lm->V);
+            }
+            d->nodes[0].state = (int16_t)slot;
+        } else {
+            d->nodes[0].state = (int16_t)lm_step(d, -1, d->lm->V - 1);  // BOS = last LM token
+        }
+    }
     d->n_beams = 1;
     d->beams[0].node = 0; d->beams[0].pb = 0.f; d->beams[0].pnb = NEG;
 }
@@ -272,10 +441,22 @@ tasr_decoder_t *tasr_decoder_create(const tasr_lm_t *lm, int V1, int beam, int t
         d->gi = (float *)tasr_alloc(sizeof(float) * LMB * big, 0);
         d->gh = (float *)tasr_alloc(sizeof(float) * LMB * big, 0);
         d->tmp = (float *)tasr_alloc(sizeof(float) * LMB * (lm->E > lm->H ? lm->E : lm->H), 0);
+        d->exbuf = (float *)tasr_alloc(sizeof(float) * LMB * lm->V, 0);
         for (int w = 0; w < TASR_NW; w++) {
             d->wtmp[w] = (int8_t *)tasr_alloc(lm->kp_max, 1);
             d->acc[w] = (int32_t *)tasr_alloc(sizeof(int32_t) * 64 * 16, 1);
         }
+        // Precompute BOS state once and cache it for fast resets
+        tasr_decoder_reset(d);
+        if (d->nodes[0].state >= 0) {
+            d->bos_h = (float *)tasr_alloc(sizeof(float) * lm->H, 0);
+            d->bos_lp = (float *)tasr_alloc(sizeof(float) * lm->V, 0);
+            if (d->bos_h && d->bos_lp) {
+                memcpy(d->bos_h, d->st_h + (size_t)d->nodes[0].state * lm->H, sizeof(float) * lm->H);
+                memcpy(d->bos_lp, d->st_lp + (size_t)d->nodes[0].state * lm->V, sizeof(float) * lm->V);
+            }
+        }
+        return d;
     }
     tasr_decoder_reset(d);
     return d;
@@ -286,8 +467,9 @@ void tasr_decoder_free(tasr_decoder_t *d)
     if (!d) return;
     tasr_free(d->nodes); tasr_free(d->hash); tasr_free(d->free_slots);
     if (d->lm) {
-        tasr_free(d->st_h); tasr_free(d->st_lp); tasr_free(d->xq); tasr_free(d->xs); tasr_free(d->gi);
-        tasr_free(d->gh); tasr_free(d->tmp);
+        tasr_free(d->st_h); tasr_free(d->st_lp); tasr_free(d->bos_h); tasr_free(d->bos_lp);
+        tasr_free(d->xq); tasr_free(d->xs); tasr_free(d->gi);
+        tasr_free(d->gh); tasr_free(d->tmp); tasr_free(d->exbuf);
         for (int w = 0; w < TASR_NW; w++) { tasr_free(d->wtmp[w]); tasr_free(d->acc[w]); }
     }
     tasr_free(d);
