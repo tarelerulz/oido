@@ -30,3 +30,6 @@ void tasr_gemm_blk32(const int8_t *tileA, const int8_t *tileB, int kp,
 // out[t] = dot48(q, x + t*ldx) (both 16-byte aligned)
 void tasr_gemm_s8_xr(const int8_t *W, int kp, int nb, const int8_t *x, int ldq, int T, int32_t *acc);
 void tasr_dot48_rows(const int8_t *q, const int8_t *x, int ldx, int T, int32_t *out);
+// 4 consecutive 48-byte queries (stride ldq) against T rows of x (stride ldx): o_r[t] = dot48(q4 + r*ldq, x + t*ldx)
+void tasr_dot48_4q(const int8_t *q4, int ldq, const int8_t *x, int ldx, int T,
+                   int32_t *o0, int32_t *o1, int32_t *o2, int32_t *o3);

@@ -44,17 +44,19 @@ void (*tasr_parallel)(tasr_job_fn fn, void *ctx, int n) = serial_parallel;
 #endif
 #define POOL_SPIN 200000
 static struct {
-    pthread_mutex_t mu;
-    pthread_cond_t go, done;
+    _Alignas(64) atomic_uint gen;
     tasr_job_fn fn;  // NULL = exit
     void *ctx;
     int n, nt;
-    atomic_uint gen;
-    atomic_int pending;
+    _Alignas(64) atomic_int pending;
+    _Alignas(64) atomic_int sleepers;
+    _Alignas(64) atomic_int waiter_asleep;
+    _Alignas(64) pthread_mutex_t mu;
+    pthread_cond_t go, done;
     unsigned gen0;  // generation when the workers were started
     pthread_t th[TASR_NW];
     int cpu[TASR_NW];  // core of each worker, -1 = unpinned
-} pool = {PTHREAD_MUTEX_INITIALIZER, PTHREAD_COND_INITIALIZER, PTHREAD_COND_INITIALIZER};
+} pool = { .mu = PTHREAD_MUTEX_INITIALIZER, .go = PTHREAD_COND_INITIALIZER, .done = PTHREAD_COND_INITIALIZER };
 
 static void *pool_worker(void *arg)
 {
@@ -71,36 +73,46 @@ static void *pool_worker(void *arg)
         for (int i = 0; i < POOL_SPIN && (g = atomic_load_explicit(&pool.gen, memory_order_acquire)) == seen; i++) POOL_RELAX();
         if (g == seen) {
             pthread_mutex_lock(&pool.mu);
-            while ((g = atomic_load(&pool.gen)) == seen) pthread_cond_wait(&pool.go, &pool.mu);
+            atomic_fetch_add_explicit(&pool.sleepers, 1, memory_order_seq_cst);
+            while ((g = atomic_load_explicit(&pool.gen, memory_order_seq_cst)) == seen)
+                pthread_cond_wait(&pool.go, &pool.mu);
+            atomic_fetch_sub_explicit(&pool.sleepers, 1, memory_order_relaxed);
             pthread_mutex_unlock(&pool.mu);
         }
         seen = g;
         if (!pool.fn) return NULL;
         const int b = (int)((long)pool.n * w / pool.nt), e = (int)((long)pool.n * (w + 1) / pool.nt);
         if (b < e) pool.fn(pool.ctx, b, e, w);
-        if (atomic_fetch_sub_explicit(&pool.pending, 1, memory_order_acq_rel) == 1) {
-            pthread_mutex_lock(&pool.mu);
-            pthread_cond_signal(&pool.done);
-            pthread_mutex_unlock(&pool.mu);
+        if (atomic_fetch_sub_explicit(&pool.pending, 1, memory_order_seq_cst) == 1) {
+            if (atomic_load_explicit(&pool.waiter_asleep, memory_order_seq_cst)) {
+                pthread_mutex_lock(&pool.mu);
+                pthread_cond_signal(&pool.done);
+                pthread_mutex_unlock(&pool.mu);
+            }
         }
     }
 }
 
 static void pool_kick(void)
 {
-    atomic_store(&pool.pending, pool.nt - 1);
-    pthread_mutex_lock(&pool.mu);
-    atomic_fetch_add_explicit(&pool.gen, 1, memory_order_release);
-    pthread_cond_broadcast(&pool.go);
-    pthread_mutex_unlock(&pool.mu);
+    atomic_store_explicit(&pool.pending, pool.nt - 1, memory_order_relaxed);
+    atomic_fetch_add_explicit(&pool.gen, 1, memory_order_seq_cst);
+    if (atomic_load_explicit(&pool.sleepers, memory_order_seq_cst) > 0) {
+        pthread_mutex_lock(&pool.mu);
+        pthread_cond_broadcast(&pool.go);
+        pthread_mutex_unlock(&pool.mu);
+    }
 }
 
 static void pool_wait(void)
 {
     for (int i = 0; i < POOL_SPIN && atomic_load_explicit(&pool.pending, memory_order_acquire); i++) POOL_RELAX();
-    if (atomic_load(&pool.pending)) {
+    if (atomic_load_explicit(&pool.pending, memory_order_acquire)) {
         pthread_mutex_lock(&pool.mu);
-        while (atomic_load(&pool.pending)) pthread_cond_wait(&pool.done, &pool.mu);
+        atomic_store_explicit(&pool.waiter_asleep, 1, memory_order_seq_cst);
+        while (atomic_load_explicit(&pool.pending, memory_order_seq_cst))
+            pthread_cond_wait(&pool.done, &pool.mu);
+        atomic_store_explicit(&pool.waiter_asleep, 0, memory_order_relaxed);
         pthread_mutex_unlock(&pool.mu);
     }
 }
