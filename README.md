@@ -1,9 +1,38 @@
-# oido: offline speech-to-text for Android (Termux) and Raspberry Pi 400
+# oido: offline speech-to-text for the Raspberry Pi 400 and Android phones
 
-Build the C speech engine on a phone (Termux) or on a Pi 400, and use it from nano:
-Ctrl+T records a few seconds and replaces `[oido]` with the transcript.
+Talk, and your words are typed. Nothing leaves your device: no cloud, no account, no internet needed after setup.
 
-## Speed at a glance
+oido is a small, fast speech recognition engine written in C. It runs on a Raspberry Pi 400 (CPU, no GPU needed) and on Android phones through Termux. This repo is a fork of [Oído by Lokutor](https://github.com/lokutor-ai/oido) (GPL-3.0) with Pi 400 and phone builds, speed work, and dictation tools. Credits are below.
+
+## How fast is it?
+
+Time to turn a 10-second recording into text, on a Raspberry Pi 400 using 3 CPU cores with the language model on: **294 ms** (engine already loaded).
+On a Pixel 9 phone (Linux Terminal, 3 fast cores): **56 ms**.
+Real Raspberry Pi 5 hardware has not been tested.
+
+When you dictate live, your text appears about **590 ms after you stop talking** with a 500 ms silence rule. Most of that is the wait to be sure you finished; the engine itself is about 90 ms. Details and method: [BENCHMARKS.md](BENCHMARKS.md).
+
+## I just want to dictate (Raspberry Pi OS)
+
+Download the packages from [oido-dictate-deb releases](https://github.com/tarelerulz/oido-dictate-deb/releases), then:
+
+    sudo apt install ./oido-dictate_*_arm64.deb
+
+The speech model (about 15 MB, not in the package) is downloaded on first run. `oido-doctor` checks your microphone and setup. There is an optional GPU add-on package, `oido-dictate-gpu`, but on the Pi 400 the CPU engine is faster for normal phrases.
+
+## I want to build it myself
+
+- **Phone (Termux) or Pi 400, with nano:** build the engine, then press Ctrl+T in nano to record a few seconds and replace `[oido]` with the transcript. See [Build the phone version](#build-the-phone-version-termux-aarch64-armv82--dotprod) below and `host/pi400_setup.sh` for the Pi 400.
+- **Live dictation into a terminal (voice commands, shorter wait):** see [oido-streaming](https://github.com/tarelerulz/oido-streaming).
+- **Run it on the Pi 400 GPU (experimental):** [gpu-port-kit](https://github.com/tarelerulz/gpu-port-kit).
+
+## Good to know
+
+- English models (a Spanish model exists on Lokutor's Hugging Face page). Accuracy on everyday sentences: about 6 wrong words per 100 on a 40-sentence test with the language model.
+- Audio must be 16 kHz mono WAV for the command-line tool.
+- The speed table that compared this build with upstream oido v2a/v2b is kept further down for reference; it was measured earlier with a different method.
+
+## Older speed comparison with upstream (measured earlier, different method)
 
 Wall-clock time to transcribe a 10-second clip, median of 10 runs, beam 4 with the language model (full table and method in [BENCHMARKS.md](BENCHMARKS.md)):
 
